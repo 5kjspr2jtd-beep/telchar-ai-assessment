@@ -1,0 +1,17 @@
+node_modules
+dist
+.DS_Store
+
+# Other projects
+backyard-baseball.html
+duck-hunt.html
+liberty-defined/
+my-react-app/
+nuclear-app/
+outrun/
+princess-unicorn-bubble-pop.html
+story-lifecycle-board/
+telchar-assessment.jsx
+trackandfield/
+us-states-capitals.html
+.claude/
