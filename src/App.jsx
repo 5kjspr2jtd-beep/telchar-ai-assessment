@@ -882,7 +882,7 @@ function Gauge({ score, size = 180, label, isOverall = false }) {
         </text>
       </svg>
       {label && (
-        <div style={{ color: BRAND.gray300, fontSize: isOverall ? 20 : 14, fontWeight: isOverall ? 600 : 500, marginTop: 4, lineHeight: 1.35, fontFamily: "'DM Sans', sans-serif", padding: "0 4px", minHeight: isOverall ? "auto" : 36, display: "flex", alignItems: "flex-start", justifyContent: "center" }}>
+        <div style={{ color: BRAND.gray300, fontSize: isOverall ? 20 : 14, fontWeight: isOverall ? 600 : 500, marginTop: 0, lineHeight: 1.35, fontFamily: "'DM Sans', sans-serif", padding: "0 4px", minHeight: isOverall ? "auto" : 32, display: "flex", alignItems: "flex-start", justifyContent: "center" }}>
           {label}
         </div>
       )}
@@ -1309,18 +1309,18 @@ function ResultsPage({ answers, scores, quickWins }) {
   return (
     <div style={{ minHeight: "100vh", background: `linear-gradient(170deg, ${BRAND.navyDeep} 0%, ${BRAND.navy} 100%)`, padding: "40px 20px 80px" }}>
       <div style={{ maxWidth: 1160, margin: "0 auto", opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(20px)", transition: "all 0.6s ease" }}>
-        <div style={{ textAlign: "center", marginBottom: 48 }}>
-          <div style={{ marginBottom: 24, display: "flex", justifyContent: "center" }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
             <LogoMark />
           </div>
           <h1 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 700, color: BRAND.white, marginBottom: 8 }}>Telchar AI Readiness Index<sup style={{ fontSize: "0.45em", verticalAlign: "super", opacity: 0.7 }}>{"\u2122"}</sup></h1>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, color: BRAND.gray400 }}>{answers.company_name}{answers.industry ? ` \u00B7 ${answers.industry}` : ""}</p>
         </div>
 
-        <div style={{ background: BRAND.navyLight + "80", borderRadius: 20, padding: "56px 32px 48px", textAlign: "center", marginBottom: 36, border: `1px solid ${BRAND.navyLight}`, overflow: "hidden" }}>
+        <div style={{ background: BRAND.navyLight + "80", borderRadius: 20, padding: "40px 32px 40px", textAlign: "center", marginBottom: 32, border: `1px solid ${BRAND.navyLight}`, overflow: "hidden" }}>
           <Gauge score={scores.overall} size={240} isOverall />
-          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 26, fontWeight: 600, color: BRAND.white, marginTop: 20 }}>{getScoreLabel(scores.overall)}</div>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: BRAND.gray400, marginTop: 14, maxWidth: 560, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
+          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 26, fontWeight: 600, color: BRAND.white, marginTop: 12 }}>{getScoreLabel(scores.overall)}</div>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: BRAND.gray400, marginTop: 8, maxWidth: 560, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
             {scores.overall < 40 ? "Your business has significant opportunity to benefit from AI. Most of your operations are running on manual effort, which means the upside is substantial." : scores.overall < 65 ? "You have some systems in place, but there are clear areas where AI can reduce cost, save time, and improve how you operate day to day." : scores.overall < 85 ? "Your business has solid foundations. There are targeted areas where AI can optimize what's already working and unlock the next level of efficiency." : "Your business is well ahead of the curve. Fine-tuned AI integrations can help you scale and maintain your competitive edge."}
           </p>
         </div>
@@ -1330,7 +1330,7 @@ function ResultsPage({ answers, scores, quickWins }) {
             const cat = scores.categories[key];
             if (!cat) return null;
             return (
-              <div key={key} style={{ background: BRAND.navyLight + "80", borderRadius: 14, padding: "28px 12px 28px", textAlign: "center", border: `1px solid ${BRAND.navyLight}`, display: "flex", flexDirection: "column", alignItems: "center", overflow: "hidden" }}>
+              <div key={key} style={{ background: BRAND.navyLight + "80", borderRadius: 14, padding: "20px 12px 16px", textAlign: "center", border: `1px solid ${BRAND.navyLight}`, display: "flex", flexDirection: "column", alignItems: "center", overflow: "hidden" }}>
                 <Gauge score={cat.score} size={195} label={cat.label} />
               </div>
             );
