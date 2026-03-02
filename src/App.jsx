@@ -874,10 +874,10 @@ function Gauge({ score, size = 180, label, isOverall = false }) {
             transform={`rotate(${rotation} ${cx} ${cy})`}
             style={{ filter: isOverall ? `drop-shadow(0 0 14px ${color}70)` : `drop-shadow(0 0 5px ${color}40)` }} />
         )}
-        <text x={cx} y={cy - (isOverall ? 30 : gaugeSize * 0.03)} textAnchor="middle" dominantBaseline="middle" fill={BRAND.white} fontSize={isOverall ? 140 : gaugeSize * 0.327} fontWeight="700" fontFamily="'DM Sans', sans-serif">
+        <text x={cx} y={cy - (isOverall ? 9 : gaugeSize * 0.005)} textAnchor="middle" dominantBaseline="middle" fill={BRAND.white} fontSize={isOverall ? 187 : gaugeSize * 0.381} fontWeight="700" fontFamily="'DM Sans', sans-serif">
           {animatedScore}
         </text>
-        <text x={cx} y={cy + (isOverall ? 52 : gaugeSize * 0.16)} textAnchor="middle" fill={BRAND.gray400} fontSize={isOverall ? 26 : gaugeSize * 0.1} fontFamily="'DM Sans', sans-serif">
+        <text x={cx} y={cy + (isOverall ? 69 : gaugeSize * 0.19)} textAnchor="middle" fill={BRAND.gray400} fontSize={isOverall ? 26 : gaugeSize * 0.1} fontFamily="'DM Sans', sans-serif">
           out of 100
         </text>
       </svg>
@@ -1319,7 +1319,7 @@ function ResultsPage({ answers, scores, quickWins }) {
 
         <div style={{ background: BRAND.navyLight + "80", borderRadius: 20, padding: "12px 32px 12px", textAlign: "center", marginBottom: 32, border: `1px solid ${BRAND.navyLight}`, overflow: "hidden" }}>
           <Gauge score={scores.overall} size={240} isOverall />
-          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 26, fontWeight: 600, color: BRAND.white, marginTop: -44 }}>{getScoreLabel(scores.overall)}</div>
+          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 26, fontWeight: 600, color: BRAND.white, marginTop: -52 }}>{getScoreLabel(scores.overall)}</div>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: BRAND.gray400, marginTop: 8, maxWidth: 560, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
             {scores.overall < 40 ? "Your business has significant opportunity to benefit from AI. Most of your operations are running on manual effort, which means the upside is substantial." : scores.overall < 65 ? "You have some systems in place, but there are clear areas where AI can reduce cost, save time, and improve how you operate day to day." : scores.overall < 85 ? "Your business has solid foundations. There are targeted areas where AI can optimize what's already working and unlock the next level of efficiency." : "Your business is well ahead of the curve. Fine-tuned AI integrations can help you scale and maintain your competitive edge."}
           </p>
