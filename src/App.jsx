@@ -42,10 +42,11 @@ const INDUSTRIES = [
 ];
 
 const QUESTIONS = [
+  // Section A - Setup
   {
     id: "company_name",
     section: 1,
-    sectionTitle: "About Your Business",
+    sectionTitle: "Your Business",
     label: "What is your company name?",
     type: "text",
     required: true,
@@ -62,52 +63,29 @@ const QUESTIONS = [
     autoAdvance: true,
   },
   {
-    id: "years_in_business",
-    section: 1,
-    label: "How long have you been in business?",
-    type: "select",
-    required: true,
-    options: ["Less than 1 year", "1 to 3 years", "3 to 10 years", "10+ years"],
-    autoAdvance: true,
-  },
-  {
     id: "employee_count",
     section: 1,
     label: "How many full time employees do you have?",
     type: "select",
     required: true,
-    options: ["Just me", "2 to 10", "11 to 50", "51 to 200", "201+"],
+    options: ["Just me", "2 to 4", "5 to 10", "11 to 25", "26 to 50", "51 to 100", "100+"],
     autoAdvance: true,
   },
+  // Section B - Operational Friction
   {
-    id: "annual_revenue",
-    section: 1,
-    label: "What is your approximate annual revenue?",
+    id: "admin_hours",
+    section: 2,
+    sectionTitle: "Operational Friction",
+    label: "How much time per week does your team spend on repetitive admin tasks like data entry, invoicing, follow-ups, or reporting?",
     type: "select",
     required: true,
-    options: ["Under $500K", "$500K to $1M", "$1M to $5M", "$5M to $20M", "$20M+", "Prefer not to say"],
     autoAdvance: true,
-  },
-  {
-    id: "contact_name",
-    section: 1,
-    label: "What is your name?",
-    type: "text",
-    required: true,
-    placeholder: "Your full name",
-  },
-  {
-    id: "contact_email",
-    section: 1,
-    label: "What is your email?",
-    type: "email",
-    required: true,
-    placeholder: "you@company.com",
+    scoring: { category: "data", scores: { 0: 4, 1: 3, 2: 2, 3: 1, 4: 1 } },
+    options: ["Less than 5 hours", "5 to 15 hours", "15 to 30 hours", "30+ hours", "No idea"],
   },
   {
     id: "customer_intake",
     section: 2,
-    sectionTitle: "How You Operate Today",
     label: "How do you currently manage customer inquiries or intake?",
     type: "select",
     required: true,
@@ -118,22 +96,6 @@ const QUESTIONS = [
       "A CRM or intake system",
       "A mix of both",
       "We don't have a defined process",
-    ],
-  },
-  {
-    id: "customer_acquisition",
-    section: 2,
-    label: "How do your customers typically find you?",
-    type: "multiselect",
-    required: true,
-    scoring: { category: "sales" },
-    options: [
-      "Word of mouth",
-      "Social media",
-      "Paid ads",
-      "Our website",
-      "Referral partners",
-      "We're not sure",
     ],
   },
   {
@@ -152,31 +114,6 @@ const QUESTIONS = [
     ],
   },
   {
-    id: "admin_hours",
-    section: 2,
-    label: "How much time per week does your team spend on repetitive admin tasks like data entry, invoicing, follow-ups, or reporting?",
-    type: "select",
-    required: true,
-    autoAdvance: true,
-    scoring: { category: "data", scores: { 0: 4, 1: 3, 2: 2, 3: 1, 4: 1 } },
-    options: ["Less than 5 hours", "5 to 15 hours", "15 to 30 hours", "30+ hours", "No idea"],
-  },
-  {
-    id: "performance_tracking",
-    section: 2,
-    label: "How do you currently track business performance (revenue, costs, customer satisfaction)?",
-    type: "select",
-    required: true,
-    autoAdvance: true,
-    scoring: { category: "data", scores: { 0: 2, 1: 3, 2: 4, 3: 1 } },
-    options: [
-      "Spreadsheets",
-      "Accounting software like QuickBooks",
-      "A dashboard or BI tool",
-      "We don't track this consistently",
-    ],
-  },
-  {
     id: "sales_process",
     section: 2,
     label: "What does your sales process look like?",
@@ -191,24 +128,42 @@ const QUESTIONS = [
       "We use a CRM to manage everything",
     ],
   },
+  // Section C - Visibility and Systems
   {
-    id: "content_creation",
-    section: 2,
-    label: "How do you handle content creation (social media, marketing, proposals)?",
+    id: "performance_tracking",
+    section: 3,
+    sectionTitle: "Visibility and Systems",
+    label: "How do you currently track business performance (revenue, costs, customer satisfaction)?",
     type: "select",
     required: true,
     autoAdvance: true,
-    scoring: { category: "content", scores: { 0: 2, 1: 3, 2: 3, 3: 1 } },
+    scoring: { category: "data", scores: { 0: 2, 1: 3, 2: 4, 3: 1 } },
     options: [
-      "We do it ourselves when we have time",
-      "We have someone dedicated to it",
-      "We outsource it",
-      "We don't do much of this",
+      "Spreadsheets",
+      "Accounting software like QuickBooks",
+      "A dashboard or BI tool",
+      "We don't track this consistently",
+    ],
+  },
+  {
+    id: "customer_acquisition",
+    section: 3,
+    label: "How do your customers typically find you?",
+    type: "multiselect",
+    required: true,
+    scoring: { category: "sales" },
+    options: [
+      "Word of mouth",
+      "Social media",
+      "Paid ads",
+      "Our website",
+      "Referral partners",
+      "We're not sure",
     ],
   },
   {
     id: "knowledge_management",
-    section: 2,
+    section: 3,
     label: "How are internal documents, SOPs, or company knowledge stored and shared?",
     type: "select",
     required: true,
@@ -222,9 +177,41 @@ const QUESTIONS = [
     ],
   },
   {
-    id: "tech_comfort",
+    id: "content_creation",
     section: 3,
-    sectionTitle: "Your Relationship with Technology",
+    label: "How do you handle content creation (social media, marketing, proposals)?",
+    type: "select",
+    required: true,
+    autoAdvance: true,
+    scoring: { category: "content", scores: { 0: 2, 1: 3, 2: 3, 3: 1 } },
+    options: [
+      "We do it ourselves when we have time",
+      "We have someone dedicated to it",
+      "We outsource it",
+      "We don't do much of this",
+    ],
+  },
+  // Section D - Technology Readiness
+  {
+    id: "growth_priority",
+    section: 4,
+    sectionTitle: "Technology and Direction",
+    label: "What is your primary focus for the next 12 months?",
+    type: "select",
+    required: true,
+    autoAdvance: true,
+    options: [
+      "Increase revenue",
+      "Improve margins",
+      "Reduce operational workload",
+      "Stabilize growth",
+      "Prepare for exit",
+      "Not sure",
+    ],
+  },
+  {
+    id: "tech_comfort",
+    section: 4,
     label: "How would you rate your team's comfort level with adopting new technology?",
     type: "select",
     required: true,
@@ -234,7 +221,7 @@ const QUESTIONS = [
   },
   {
     id: "ai_experience",
-    section: 3,
+    section: 4,
     label: "Have you tried using any AI tools in your business? (ChatGPT, Copilot, automation tools, etc.)",
     type: "select",
     required: true,
@@ -247,13 +234,25 @@ const QUESTIONS = [
       "AI is already embedded in our operations",
     ],
   },
+  // Final Gate - Personalization (after all diagnostic questions)
   {
-    id: "biggest_frustration",
-    section: 3,
-    label: "What is your biggest frustration in running your business day to day?",
-    type: "textarea",
-    required: false,
-    placeholder: "Optional, but helpful for us to understand your situation",
+    id: "contact_name",
+    section: 5,
+    sectionTitle: "Your Scorecard",
+    isGate: true,
+    label: "What is your name?",
+    type: "text",
+    required: true,
+    placeholder: "Your full name",
+  },
+  {
+    id: "contact_email",
+    section: 5,
+    isGate: true,
+    label: "What is your email?",
+    type: "email",
+    required: true,
+    placeholder: "you@company.com",
   },
 ];
 
@@ -588,10 +587,10 @@ function getAcquisitionContent(answers) {
 }
 
 function getDynamicCTA(score) {
-  if (score < 40) return { heading: "Let's find your starting point", desc: "Your assessment shows significant opportunity. We will walk through your results, identify the highest-impact first step, and give you a clear path forward." };
-  if (score < 65) return { heading: "You have real opportunities. Let's prioritize them", desc: "Your business has a solid base with clear areas for improvement. We will review your scorecard, rank the opportunities by impact, and map out a realistic timeline." };
-  if (score < 85) return { heading: "You're ready to move. Let's build your roadmap", desc: "Your operations are strong. The right AI implementations can compound what is already working. We will identify the specific moves that deliver the most value at your stage." };
-  return { heading: "Let's fine-tune your competitive edge", desc: "Your AI maturity is well ahead of most businesses your size. We will explore advanced applications and optimization strategies that match your level." };
+  if (score < 50) return { heading: "You have structural inefficiency. That means immediate opportunity", desc: "Most of your operations are absorbing cost that AI can eliminate. A 30-minute call identifies the highest-value starting point and gives you a clear path forward." };
+  if (score < 70) return { heading: "Solid base. Measurable leakage", desc: "Your business runs, but time and money are escaping through gaps AI can close. We will review your scorecard, rank the leakage by impact, and map a realistic timeline." };
+  if (score < 85) return { heading: "Organized but not optimized", desc: "Your operations are well-structured. The next step is targeted AI implementation that compounds what is already working. We will identify the specific moves that deliver the most value at your stage." };
+  return { heading: "Positioned to compound", desc: "Your AI maturity is ahead of most businesses your size. A focused conversation identifies advanced applications and optimization strategies that match your level." };
 }
 
 function generatePDFContent(answers, scores, quickWins) {
@@ -698,10 +697,11 @@ function calculateScores(answers) {
 function calculateLeadQuality(answers) {
   let score = 0;
   const emp = answers.employee_count;
-  if (emp === "11 to 50") score += 30;
-  else if (emp === "51 to 200") score += 25;
-  else if (emp === "2 to 10") score += 15;
-  else if (emp === "201+") score += 20;
+  if (emp === "11 to 25" || emp === "26 to 50") score += 30;
+  else if (emp === "51 to 100") score += 25;
+  else if (emp === "100+") score += 20;
+  else if (emp === "5 to 10") score += 15;
+  else if (emp === "2 to 4") score += 10;
   else score += 5;
 
   const rev = answers.annual_revenue;
@@ -809,18 +809,18 @@ function generateQuickWins(answers, categoryScores) {
     }
   }
 
-  if (wins.length < 3) {
+  if (wins.length < 2) {
     const fillers = [
       { category: "Operations Efficiency", title: "Audit Your Most Time-Intensive Workflows", desc: "Even well-run operations have hidden inefficiencies. A targeted workflow audit can identify 2 to 3 processes where AI automation delivers immediate ROI." },
       { category: "Technology Readiness", title: "Build an AI Adoption Roadmap", desc: "Knowing where you stand is the first step. A structured 90-day plan can move your team from awareness to active AI usage without disrupting what's already working." },
       { category: "Sales & Customer Experience", title: "Improve Response Time to Customer Inquiries", desc: "Speed to response is one of the biggest drivers of conversion. AI-assisted responses can cut your reply time from hours to minutes for common inquiries." },
     ];
     for (const f of fillers) {
-      if (wins.length >= 5) break;
+      if (wins.length >= 2) break;
       if (!wins.find((w) => w.title === f.title)) wins.push(f);
     }
   }
-  return wins.slice(0, 5);
+  return wins.slice(0, 2);
 }
 
 function Gauge({ score, size = 180, label, isOverall = false }) {
@@ -947,7 +947,7 @@ function LandingPage({ onStart }) {
         </div>
 
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: BRAND.gray400, marginBottom: 32 }}>
-          Takes about 4 minutes. Free. Confidential.
+          Takes about 4 minutes. Free.
         </p>
 
         <button onClick={onStart} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, padding: "16px 48px", background: BRAND.blue, color: BRAND.white, border: "none", borderRadius: 8, cursor: "pointer", transition: "all 0.2s ease", letterSpacing: "0.02em" }}
@@ -957,8 +957,12 @@ function LandingPage({ onStart }) {
           Start Your Assessment
         </button>
 
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray500, marginTop: 16 }}>
+          Confidential. We do not sell or share your data.
+        </p>
+
         <div style={{ marginTop: 40, display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
-          {[{ num: "17", text: "Questions" }, { num: "5", text: "AI Categories Scored" }, { num: "100%", text: "Confidential" }].map((item, i) => (
+          {[{ num: "16", text: "Questions" }, { num: "5", text: "AI Categories Scored" }, { num: "100%", text: "Confidential" }].map((item, i) => (
             <div key={i} style={{ textAlign: "center" }}>
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.blue }}>{item.num}</div>
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray400, marginTop: 2 }}>{item.text}</div>
@@ -1090,7 +1094,18 @@ function AssessmentFlow({ onComplete }) {
 
         <ProgressBar current={currentIndex} total={QUESTIONS.length} />
 
-        {question.sectionTitle && (
+        {question.isGate && question.id === "contact_name" && (
+          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 600, color: BRAND.white, marginBottom: 4, lineHeight: 1.4 }}>
+            You're almost done.
+          </div>
+        )}
+        {question.isGate && question.id === "contact_name" && (
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: BRAND.gray400, marginBottom: 24, lineHeight: 1.5 }}>
+            Where should we send your full scorecard?
+          </p>
+        )}
+
+        {question.sectionTitle && !question.isGate && (
           <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: BRAND.blue, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 8 }}>
             Section {question.section}: {question.sectionTitle}
           </div>
@@ -1207,7 +1222,7 @@ function AssessmentFlow({ onComplete }) {
   );
 }
 
-function QuickWinsChart({ quickWins }) {
+function QuickWinsChart({ quickWins, companyName }) {
   const [selected, setSelected] = useState(null);
   
   // Assign impact scores for bar widths (first = highest impact)
@@ -1220,7 +1235,7 @@ function QuickWinsChart({ quickWins }) {
 
   return (
     <div style={{ marginBottom: 48 }}>
-      <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.white, marginBottom: 8 }}>Where to Start</h2>
+      <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.white, marginBottom: 8 }}>{companyName ? `Where ${companyName} Should Start` : "Where to Start"}</h2>
       <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray400, marginBottom: 24, lineHeight: 1.5 }}>Ranked by impact. Click any bar for details.</p>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {items.map((win, i) => (
@@ -1252,49 +1267,113 @@ function QuickWinsChart({ quickWins }) {
   );
 }
 
-function ReportSection({ section, defaultOpen = false }) {
+function ReportSection({ section, defaultOpen = false, locked = false, freeInsight = false, onUpgrade }) {
   const [open, setOpen] = useState(defaultOpen);
   
+  const handleClick = () => {
+    if (locked) return;
+    setOpen(!open);
+  };
+
   return (
-    <div style={{ background: BRAND.navyLight + "60", borderRadius: 12, border: `1px solid ${section.isHighImpact ? BRAND.blue + "60" : BRAND.navyLight}`, overflow: "hidden", transition: "all 0.2s ease" }}>
-      <div onClick={() => setOpen(!open)} style={{ padding: "18px 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+    <div style={{ background: BRAND.navyLight + "60", borderRadius: 12, border: `1px solid ${section.isHighImpact && !locked ? BRAND.blue + "60" : BRAND.navyLight}`, overflow: "hidden", transition: "all 0.2s ease", opacity: locked ? 0.7 : 1 }}>
+      <div onClick={handleClick} style={{ padding: "18px 24px", cursor: locked ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
             <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, color: BRAND.blue, textTransform: "uppercase", letterSpacing: "0.06em" }}>{section.category}</span>
-            {section.isHighImpact && <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 700, color: BRAND.navyDeep, background: BRAND.gold, padding: "2px 8px", borderRadius: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Highest Impact</span>}
+            {section.isHighImpact && !locked && <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 700, color: BRAND.navyDeep, background: BRAND.gold, padding: "2px 8px", borderRadius: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Highest Impact</span>}
           </div>
           <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600, color: BRAND.white }}>{section.title}</div>
-          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray500, marginTop: 2 }}>Your answer: {section.answer}</div>
+          {!locked && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray500, marginTop: 2 }}>Your answer: {section.answer}</div>}
+          {locked && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray500, marginTop: 2 }}>Score: {section.categoryScore}/100</div>}
         </div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, color: BRAND.gray400, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }}>
-          {"\u25BE"}
-        </div>
+        {!locked && (
+          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, color: BRAND.gray400, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }}>
+            {"\u25BE"}
+          </div>
+        )}
+        {locked && (
+          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, flexShrink: 0 }}>
+            {"\uD83D\uDD12"}
+          </div>
+        )}
       </div>
-      {open && (
+      {open && !locked && (
         <div style={{ padding: "0 24px 24px", borderTop: `1px solid ${BRAND.navyLight}` }}>
-          <div style={{ paddingTop: 20, marginBottom: 16 }}>
+          <div style={{ paddingTop: 20, marginBottom: freeInsight ? 0 : 16 }}>
             <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: BRAND.gold, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>What This Tells Us</div>
             <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray300, lineHeight: 1.65 }}>{section.interpretation}</div>
           </div>
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: BRAND.gold, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>What Leading Companies Are Doing</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray300, lineHeight: 1.65 }}>{section.benchmark}</div>
-          </div>
-          <div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: BRAND.gold, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Your Opportunity</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray300, lineHeight: 1.65 }}>{section.opportunity}</div>
-          </div>
+          {freeInsight && (
+            <div style={{ marginTop: 16, padding: "14px 16px", background: BRAND.navyLight + "80", borderRadius: 8, border: `1px solid ${BRAND.navyLight}` }}>
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray400, marginBottom: 8 }}>Detailed execution steps and tool recommendations available in the full report.</div>
+              <button onClick={onUpgrade}
+                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, padding: "8px 16px", background: "transparent", color: BRAND.blue, border: `1px solid ${BRAND.blue}`, borderRadius: 6, cursor: "pointer", transition: "all 0.2s ease" }}
+                onMouseOver={(e) => { e.target.style.background = BRAND.blueGlow; }}
+                onMouseOut={(e) => { e.target.style.background = "transparent"; }}
+              >
+                Unlock Full Report
+              </button>
+            </div>
+          )}
+          {!freeInsight && (
+            <>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: BRAND.gold, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>What Leading Companies Are Doing</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray300, lineHeight: 1.65 }}>{section.benchmark}</div>
+              </div>
+              <div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: BRAND.gold, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Your Opportunity</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray300, lineHeight: 1.65 }}>{section.opportunity}</div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+      {locked && (
+        <div style={{ padding: "0 24px 20px" }}>
+          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray400, marginBottom: 12 }}>Available in Full Report.</div>
+          <button onClick={onUpgrade}
+            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, padding: "10px 20px", background: "transparent", color: BRAND.blue, border: `1px solid ${BRAND.blue}`, borderRadius: 6, cursor: "pointer", transition: "all 0.2s ease" }}
+            onMouseOver={(e) => { e.target.style.background = BRAND.blueGlow; }}
+            onMouseOut={(e) => { e.target.style.background = "transparent"; }}
+          >
+            Unlock Full Report
+          </button>
         </div>
       )}
     </div>
   );
 }
 
-function ResultsPage({ answers, scores, quickWins }) {
+function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, onAdvancedCheckout }) {
   const [visible, setVisible] = useState(false);
-  const [showBar, setShowBar] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [advancedLoading, setAdvancedLoading] = useState(false);
   useEffect(() => { setTimeout(() => setVisible(true), 200); }, []);
-  useEffect(() => { const t = setTimeout(() => setShowBar(true), 3000); return () => clearTimeout(t); }, []);
+
+  const isPro = tier === "pro" || tier === "advanced";
+  const isAdvanced = tier === "advanced";
+
+  const handleCheckout = async () => {
+    setCheckoutLoading(true);
+    try {
+      if (onCheckout) await onCheckout();
+    } catch (err) {
+      console.error("Checkout error:", err);
+      setCheckoutLoading(false);
+    }
+  };
+
+  const handleAdvancedCheckout = async () => {
+    setAdvancedLoading(true);
+    try {
+      if (onAdvancedCheckout) await onAdvancedCheckout();
+    } catch (err) {
+      console.error("Advanced checkout error:", err);
+      setAdvancedLoading(false);
+    }
+  };
 
   const getScoreLabel = (s) => {
     if (s < 30) return "Getting Started";
@@ -1321,7 +1400,14 @@ function ResultsPage({ answers, scores, quickWins }) {
           <Gauge score={scores.overall} size={240} isOverall />
           <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 26, fontWeight: 600, color: BRAND.white, marginTop: -52 }}>{getScoreLabel(scores.overall)}</div>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: BRAND.gray400, marginTop: 8, maxWidth: 560, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
-            {scores.overall < 40 ? "Your business has significant opportunity to benefit from AI. Most of your operations are running on manual effort, which means the upside is substantial." : scores.overall < 65 ? "You have some systems in place, but there are clear areas where AI can reduce cost, save time, and improve how you operate day to day." : scores.overall < 85 ? "Your business has solid foundations. There are targeted areas where AI can optimize what's already working and unlock the next level of efficiency." : "Your business is well ahead of the curve. Fine-tuned AI integrations can help you scale and maintain your competitive edge."}
+            {(() => {
+              const cn = answers.company_name || "your business";
+              const adminNote = (answers.admin_hours === "15 to 30 hours" || answers.admin_hours === "30+ hours") ? " At your company size, this likely represents meaningful payroll allocated to repetitive work." : "";
+              if (scores.overall < 40) return `Based on how ${cn} operates today, there is significant opportunity to reduce cost and recover capacity through AI. Most operations are running on manual effort, which means the upside is substantial.${adminNote}`;
+              if (scores.overall < 65) return `${cn} has systems in place, but there are clear areas where AI can reduce cost, save time, and improve how you operate day to day.${adminNote}`;
+              if (scores.overall < 85) return `${cn} has solid foundations. There are targeted areas where AI can optimize what is already working and unlock the next level of efficiency.${adminNote}`;
+              return `${cn} is well ahead of the curve. Fine-tuned AI integrations can help you scale and maintain your competitive edge.`;
+            })()}
           </p>
         </div>
 
@@ -1337,55 +1423,100 @@ function ResultsPage({ answers, scores, quickWins }) {
           })}
         </div>
 
-        <QuickWinsChart quickWins={quickWins} />
+        <QuickWinsChart quickWins={quickWins} companyName={answers.company_name} />
 
         <div style={{ marginBottom: 48 }}>
-          <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.white, marginBottom: 8 }}>Your Full AI Readiness Report</h2>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray400, marginBottom: 20, lineHeight: 1.5 }}>Ranked by impact. Your weakest areas appear first. Click any section to expand the full analysis.</p>
+          <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.white, marginBottom: 8 }}>{answers.company_name ? `${answers.company_name}: AI Readiness Report` : "AI Readiness Report"}</h2>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray400, marginBottom: 20, lineHeight: 1.5 }}>{isPro ? "Full breakdown ranked by impact. Your weakest areas appear first." : "Your top 2 priority areas ranked by impact. Unlock detailed execution steps and full action plan."}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {generatePDFContent(answers, scores, quickWins).map((section, i) => (
-              <ReportSection key={i} section={section} defaultOpen={i === 0} />
+              <ReportSection key={i} section={section} defaultOpen={isPro ? i < 5 : i < 2} locked={isPro ? false : i >= 2} freeInsight={!isPro && i < 2} onUpgrade={handleCheckout} />
             ))}
           </div>
         </div>
 
-        {(() => { const cta = getDynamicCTA(scores.overall); return (
-        <div style={{ background: `linear-gradient(135deg, ${BRAND.navyLight}, ${BRAND.navy})`, borderRadius: 16, padding: "40px 32px", textAlign: "center", border: `1px solid ${BRAND.blue}30`, marginBottom: 32 }}>
-          <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.white, marginBottom: 12, marginTop: 0 }}>{cta.heading}</h3>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: BRAND.gray400, marginBottom: 24, lineHeight: 1.6, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>{cta.desc}</p>
-          <button onClick={() => { alert("In production: opens your calendar booking link."); }}
-            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600, padding: "14px 40px", background: BRAND.blue, color: BRAND.white, border: "none", borderRadius: 8, cursor: "pointer", transition: "all 0.2s ease" }}
-            onMouseOver={(e) => { e.target.style.background = BRAND.blueBright; e.target.style.boxShadow = `0 8px 24px ${BRAND.blue}40`; }}
-            onMouseOut={(e) => { e.target.style.background = BRAND.blue; e.target.style.boxShadow = "none"; }}
-          >
-            Schedule a Free Consultation
-          </button>
-        </div>
-        ); })()}
+        {!isPro && (
+          <div style={{ background: `linear-gradient(135deg, ${BRAND.navyLight}, ${BRAND.navy})`, borderRadius: 16, padding: "40px 32px", textAlign: "center", border: `1px solid ${BRAND.gold}30`, marginBottom: 32 }}>
+            <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.white, marginBottom: 12, marginTop: 0 }}>You have clear opportunity. Choose how far you want to take it.</h3>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: BRAND.gray400, marginBottom: 28, lineHeight: 1.6, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>The free score shows where you stand. The next step determines how fast you move.</p>
 
-        <div style={{ marginTop: 32, textAlign: "center", paddingBottom: 80 }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: BRAND.gold, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>Recommended for businesses ready to implement</p>
+            <button onClick={handleAdvancedCheckout} disabled={advancedLoading}
+              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, padding: "16px 44px", background: advancedLoading ? BRAND.gray500 : BRAND.gold, color: advancedLoading ? BRAND.white : BRAND.navyDeep, border: "none", borderRadius: 8, cursor: advancedLoading ? "default" : "pointer", transition: "all 0.2s ease" }}
+              onMouseOver={(e) => { if (!advancedLoading) { e.target.style.boxShadow = `0 8px 24px ${BRAND.gold}40`; e.target.style.transform = "translateY(-1px)"; } }}
+              onMouseOut={(e) => { if (!advancedLoading) { e.target.style.boxShadow = "none"; e.target.style.transform = "translateY(0)"; } }}
+            >
+              {advancedLoading ? "Redirecting..." : "Get the 90-Day Execution Plan \u2013 $150"}
+            </button>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray400, marginTop: 14, maxWidth: 480, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>Everything in the full report plus a structured 90-day roadmap with sequencing, KPIs, ownership guidance, and implementation pacing.</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, marginTop: 8 }}>Without a structured roadmap, most teams delay action and lose momentum.</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, marginTop: 6, fontStyle: "italic", maxWidth: 440, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>This roadmap is built from your assessment responses. More detailed and accurate inputs produce a stronger plan.</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: BRAND.gray500, marginTop: 4 }}>Designed for execution. Not external research or bespoke consulting.</p>
+            <p style={{ marginTop: 10 }}><span onClick={() => { alert("In production: opens sample 90-day roadmap PDF preview."); }} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "3px" }}>View sample 90-day roadmap</span></p>
+
+            <div style={{ marginTop: 28, paddingTop: 24, borderTop: `1px solid ${BRAND.navyLight}` }}>
+              <button onClick={handleCheckout} disabled={checkoutLoading}
+                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, padding: "12px 36px", background: "transparent", color: checkoutLoading ? BRAND.gray500 : BRAND.blue, border: `1px solid ${checkoutLoading ? BRAND.gray500 : BRAND.blue}`, borderRadius: 8, cursor: checkoutLoading ? "default" : "pointer", transition: "all 0.2s ease" }}
+                onMouseOver={(e) => { if (!checkoutLoading) { e.target.style.background = BRAND.blueGlow; } }}
+                onMouseOut={(e) => { if (!checkoutLoading) { e.target.style.background = "transparent"; } }}
+              >
+                {checkoutLoading ? "Redirecting..." : "Unlock Full Report \u2013 $50"}
+              </button>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray500, marginTop: 10 }}>Detailed action steps and tool guidance you can execute immediately.</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, marginTop: 4 }}>For teams who prefer to determine sequencing internally.</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, marginTop: 6, fontStyle: "italic" }}>The quality of your report depends on the accuracy of the information provided in your assessment.</p>
+              <p style={{ marginTop: 8 }}><span onClick={() => { alert("In production: opens sample full report PDF preview."); }} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "3px" }}>View sample full report</span></p>
+            </div>
+
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: `1px solid ${BRAND.navyLight}` }}>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, lineHeight: 1.5 }}>Full Report = What to do &nbsp;&nbsp;&middot;&nbsp;&nbsp; Advanced Plan = What to do, and in what order</p>
+            </div>
+
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: BRAND.gray500, marginTop: 16 }}>Secure checkout powered by Stripe.</p>
+          </div>
+        )}
+
+        {isPro && !isAdvanced && (
+          <div style={{ background: `linear-gradient(135deg, ${BRAND.navyLight}, ${BRAND.navy})`, borderRadius: 16, padding: "40px 32px", textAlign: "center", border: `1px solid ${BRAND.green}30`, marginBottom: 32 }}>
+            <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.white, marginBottom: 12, marginTop: 0 }}>Pro Report Unlocked</h3>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: BRAND.gray400, marginBottom: 16, lineHeight: 1.6, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>Your full AI Readiness Report with execution detail is available above.</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, marginBottom: 24, fontStyle: "italic" }}>This report is generated from your assessment responses. It does not include external company research.</p>
+            <div style={{ paddingTop: 16, borderTop: `1px solid ${BRAND.navyLight}` }}>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: BRAND.gold, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>Recommended for businesses ready to implement</p>
+              <button onClick={handleAdvancedCheckout} disabled={advancedLoading}
+                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, fontWeight: 600, padding: "16px 44px", background: advancedLoading ? BRAND.gray500 : BRAND.gold, color: advancedLoading ? BRAND.white : BRAND.navyDeep, border: "none", borderRadius: 8, cursor: advancedLoading ? "default" : "pointer", transition: "all 0.2s ease" }}
+                onMouseOver={(e) => { if (!advancedLoading) { e.target.style.boxShadow = `0 8px 24px ${BRAND.gold}40`; e.target.style.transform = "translateY(-1px)"; } }}
+                onMouseOut={(e) => { if (!advancedLoading) { e.target.style.boxShadow = "none"; e.target.style.transform = "translateY(0)"; } }}
+              >
+                {advancedLoading ? "Redirecting..." : "Get the 90-Day Execution Plan \u2013 $150"}
+              </button>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray400, marginTop: 14, maxWidth: 480, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>Everything in the full report plus a structured 90-day roadmap with sequencing, KPIs, ownership guidance, and implementation pacing.</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, marginTop: 8 }}>Without a structured roadmap, most teams delay action and lose momentum.</p>
+            </div>
+          </div>
+        )}
+
+        {isAdvanced && (
+          <div style={{ background: `linear-gradient(135deg, ${BRAND.navyLight}, ${BRAND.navy})`, borderRadius: 16, padding: "40px 32px", textAlign: "center", border: `1px solid ${BRAND.green}30`, marginBottom: 32 }}>
+            <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.white, marginBottom: 12, marginTop: 0 }}>Advanced Plan Unlocked</h3>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: BRAND.gray400, marginBottom: 16, lineHeight: 1.6, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>Your complete AI Readiness Report with 90-day roadmap and implementation guidance is available above.</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, marginBottom: 16, fontStyle: "italic", maxWidth: 460, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>This plan is built from your self-reported inputs and does not include external company research or bespoke competitive analysis.</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray500, lineHeight: 1.5 }}>Limited consulting engagements are available by application for businesses that require hands-on implementation support.</p>
+          </div>
+        )}
+
+        <div style={{ borderTop: `1px solid ${BRAND.navyLight}`, marginTop: 16, paddingTop: 32, marginBottom: 32, textAlign: "center" }}>
+          <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 18, fontWeight: 600, color: BRAND.white, marginBottom: 12, marginTop: 0 }}>Need direct implementation support?</h3>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray400, lineHeight: 1.65, maxWidth: 500, marginLeft: "auto", marginRight: "auto", marginBottom: 6 }}>For businesses ready to move beyond planning into disciplined execution, hands-on advisory support is available.</p>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray400, lineHeight: 1.65, maxWidth: 500, marginLeft: "auto", marginRight: "auto", marginBottom: 16 }}>These engagements are structured and execution-focused. Not every business will be the right fit, and that is intentional. The goal is alignment, clarity, and measurable progress.</p>
+          <span onClick={() => { alert("In production: routes to implementation support page."); }} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.blue, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "3px" }}>Learn about implementation support</span>
+        </div>
+
+        <div style={{ marginTop: 32, textAlign: "center", paddingBottom: 40 }}>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, lineHeight: 1.5 }}>Your responses are confidential. We do not sell, share, or use your data for any purpose beyond delivering your assessment.</p>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: BRAND.gray500, marginTop: 8 }}>The Telchar AI Readiness Index{"\u2122"} and its scoring methodology are proprietary to Telchar AI.</p>
         </div>
       </div>
-
-      {showBar && (() => { const cta = getDynamicCTA(scores.overall); return (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 900, background: `linear-gradient(180deg, transparent 0%, ${BRAND.navyDeep}ee 20%, ${BRAND.navyDeep} 100%)`, padding: "24px 20px 20px", transform: showBar ? "translateY(0)" : "translateY(100%)", transition: "transform 0.4s ease", display: "flex", justifyContent: "center" }}>
-          <div style={{ maxWidth: 600, width: "100%", display: "flex", alignItems: "center", gap: 16 }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, color: BRAND.white }}>{cta.heading}</div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray400 }}>Free 30 min consultation. No obligation.</div>
-            </div>
-            <button onClick={() => { alert("In production: opens your calendar booking link."); }}
-              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, padding: "12px 24px", background: BRAND.blue, color: BRAND.white, border: "none", borderRadius: 8, cursor: "pointer", transition: "all 0.2s ease", whiteSpace: "nowrap", flexShrink: 0 }}
-              onMouseOver={(e) => { e.target.style.background = BRAND.blueBright; e.target.style.boxShadow = `0 4px 16px ${BRAND.blue}40`; }}
-              onMouseOut={(e) => { e.target.style.background = BRAND.blue; e.target.style.boxShadow = "none"; }}
-            >
-              Book a Call
-            </button>
-          </div>
-        </div>
-      ); })()}
     </div>
   );
 }
@@ -1396,6 +1527,50 @@ export default function App() {
   const [scores, setScores] = useState(null);
   const [quickWins, setQuickWins] = useState(null);
   const [leadQuality, setLeadQuality] = useState(null);
+  const [tier, setTier] = useState("free");
+
+  // Check for payment redirect and restore state on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paymentStatus = params.get("payment");
+    const sessionId = params.get("session_id");
+    const paidTier = params.get("tier");
+
+    // Check sessionStorage for persisted tier
+    try {
+      const stored = sessionStorage.getItem("telchar_report_tier");
+      if (stored === "pro" || stored === "advanced") {
+        setTier(stored);
+      }
+    } catch (e) { /* sessionStorage unavailable */ }
+
+    if (paymentStatus === "success" && sessionId) {
+      const resolvedTier = paidTier === "advanced" ? "advanced" : "pro";
+      setTier(resolvedTier);
+      try {
+        sessionStorage.setItem("telchar_report_tier", resolvedTier);
+        sessionStorage.setItem("telchar_session_id", sessionId);
+      } catch (e) { /* sessionStorage unavailable */ }
+      window.history.replaceState({}, "", window.location.pathname);
+    } else if (paymentStatus === "cancel") {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+
+    // Restore assessment data from sessionStorage if returning from Stripe
+    try {
+      const saved = sessionStorage.getItem("telchar_assessment_data");
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.answers && data.scores && data.quickWins) {
+          setAnswers(data.answers);
+          setScores(data.scores);
+          setQuickWins(data.quickWins);
+          setLeadQuality(data.leadQuality);
+          setPage("results");
+        }
+      }
+    } catch (e) { /* parse error or sessionStorage unavailable */ }
+  }, []);
 
   const handleComplete = (finalAnswers) => {
     const calculatedScores = calculateScores(finalAnswers);
@@ -1405,12 +1580,68 @@ export default function App() {
     setScores(calculatedScores);
     setQuickWins(wins);
     setLeadQuality(lead);
+    try {
+      sessionStorage.setItem("telchar_assessment_data", JSON.stringify({
+        answers: finalAnswers,
+        scores: calculatedScores,
+        quickWins: wins,
+        leadQuality: lead,
+      }));
+    } catch (e) { /* sessionStorage unavailable */ }
     console.log("=== SUBMISSION DATA ===");
     console.log("Answers:", finalAnswers);
     console.log("Scores:", calculatedScores);
     console.log("Lead Quality:", lead);
     setPage("results");
     window.scrollTo(0, 0);
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyName: answers?.company_name || "",
+          contactEmail: answers?.contact_email || "",
+          tier: "pro",
+        }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("No checkout URL returned:", data);
+        alert("Unable to start checkout. Please try again.");
+      }
+    } catch (err) {
+      console.error("Checkout fetch error:", err);
+      alert("Unable to start checkout. Please try again.");
+    }
+  };
+
+  const handleAdvancedCheckout = async () => {
+    try {
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyName: answers?.company_name || "",
+          contactEmail: answers?.contact_email || "",
+          tier: "advanced",
+        }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("No checkout URL returned:", data);
+        alert("Unable to start checkout. Please try again.");
+      }
+    } catch (err) {
+      console.error("Advanced checkout fetch error:", err);
+      alert("Unable to start checkout. Please try again.");
+    }
   };
 
   return (
@@ -1424,7 +1655,7 @@ export default function App() {
       `}</style>
       {page === "landing" && <LandingPage onStart={() => setPage("assessment")} />}
       {page === "assessment" && <AssessmentFlow onComplete={handleComplete} />}
-      {page === "results" && answers && scores && <ResultsPage answers={answers} scores={scores} quickWins={quickWins} />}
+      {page === "results" && answers && scores && <ResultsPage answers={answers} scores={scores} quickWins={quickWins} tier={tier} onCheckout={handleCheckout} onAdvancedCheckout={handleAdvancedCheckout} />}
     </>
   );
 }
