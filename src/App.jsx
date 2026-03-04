@@ -991,7 +991,7 @@ function LandingPage({ onStart }) {
         </p>
 
         <div style={{ marginTop: 40, display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
-          {[{ num: "16", text: "Questions" }, { num: "5", text: "AI Categories Scored" }, { num: "100%", text: "Confidential" }].map((item, i) => (
+          {[{ num: "17", text: "Questions" }, { num: "5", text: "AI Categories Scored" }, { num: "100%", text: "Confidential" }].map((item, i) => (
             <div key={i} style={{ textAlign: "center" }}>
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.blue }}>{item.num}</div>
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray400, marginTop: 2 }}>{item.text}</div>
@@ -1338,16 +1338,16 @@ function ReportSection({ section, defaultOpen = false, locked = false, freeInsig
   };
 
   return (
-    <div style={{ background: BRAND.navyLight + "60", borderRadius: 12, border: `1px solid ${section.isHighImpact && !locked ? BRAND.blue + "60" : BRAND.navyLight}`, overflow: "hidden", transition: "all 0.2s ease", opacity: locked ? 0.7 : 1 }}>
-      <div onClick={handleClick} style={{ padding: "18px 24px", cursor: locked ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+    <div style={{ background: BRAND.navyLight + "60", borderRadius: 12, border: `1px solid ${section.isHighImpact && !locked ? BRAND.blue + "60" : BRAND.navyLight}`, overflow: "hidden", transition: "all 0.2s ease", opacity: locked ? 0.6 : 1 }}>
+      <div onClick={handleClick} style={{ padding: locked ? "14px 24px" : "18px 24px", cursor: locked ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
             <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, color: BRAND.blue, textTransform: "uppercase", letterSpacing: "0.06em" }}>{section.category}</span>
             {section.isHighImpact && !locked && <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 700, color: BRAND.navyDeep, background: BRAND.gold, padding: "2px 8px", borderRadius: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Highest Impact</span>}
           </div>
-          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600, color: BRAND.white }}>{section.title}</div>
+          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: locked ? 15 : 16, fontWeight: 600, color: BRAND.white }}>{section.title}</div>
           {!locked && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray500, marginTop: 2 }}>Your answer: {section.answer}</div>}
-          {locked && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray500, marginTop: 2 }}>Score: {section.categoryScore}/100</div>}
+          {locked && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: BRAND.gray500, marginTop: 2, opacity: 0.7 }}>Score: {section.categoryScore}/100</div>}
         </div>
         {!locked && (
           <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, color: BRAND.gray400, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }}>
@@ -1393,8 +1393,8 @@ function ReportSection({ section, defaultOpen = false, locked = false, freeInsig
         </div>
       )}
       {locked && (
-        <div style={{ padding: "0 24px 20px" }}>
-          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray400, marginBottom: 12 }}>Available in Full Report.</div>
+        <div style={{ padding: "0 24px 14px" }}>
+          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: BRAND.gray400, marginBottom: 10, opacity: 0.8 }}>Available in Full Report.</div>
           <button onClick={onUpgrade}
             style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, padding: "10px 20px", background: "transparent", color: BRAND.blue, border: `1px solid ${BRAND.blue}`, borderRadius: 6, cursor: "pointer", transition: "all 0.2s ease" }}
             onMouseOver={(e) => { e.target.style.background = BRAND.blueGlow; }}
@@ -1412,10 +1412,20 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
   const [visible, setVisible] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [advancedLoading, setAdvancedLoading] = useState(false);
+  const [pricingGlow, setPricingGlow] = useState(false);
+  const pricingRef = useRef(null);
   useEffect(() => { setTimeout(() => setVisible(true), 200); }, []);
 
   const isPro = tier === "pro" || tier === "advanced";
   const isAdvanced = tier === "advanced";
+
+  const scrollToPricing = () => {
+    if (pricingRef.current) {
+      pricingRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      setPricingGlow(true);
+      setTimeout(() => setPricingGlow(false), 1500);
+    }
+  };
 
   const handleCheckout = async () => {
     setCheckoutLoading(true);
@@ -1492,13 +1502,13 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: BRAND.gray400, marginBottom: 20, lineHeight: 1.5 }}>{isPro ? "Full breakdown ranked by impact. Your weakest areas appear first." : "Your top 2 priority areas ranked by impact. Unlock detailed execution steps and full action plan."}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {generatePDFContent(answers, scores, quickWins).map((section, i) => (
-              <ReportSection key={i} section={section} defaultOpen={isPro ? i < 5 : i < 2} locked={isPro ? false : i >= 2} freeInsight={!isPro && i < 2} onUpgrade={handleCheckout} />
+              <ReportSection key={i} section={section} defaultOpen={isPro ? i < 5 : false} locked={isPro ? false : i >= 2} freeInsight={!isPro && i < 2} onUpgrade={scrollToPricing} />
             ))}
           </div>
         </div>
 
         {!isPro && (
-          <div style={{ background: `linear-gradient(135deg, ${BRAND.navyLight}, ${BRAND.navy})`, borderRadius: 16, padding: "40px 32px", textAlign: "center", border: `1px solid ${BRAND.gold}30`, marginBottom: 32 }}>
+          <div ref={pricingRef} style={{ background: `linear-gradient(135deg, ${BRAND.navyLight}, ${BRAND.navy})`, borderRadius: 16, padding: "40px 32px", textAlign: "center", border: `1px solid ${pricingGlow ? BRAND.gold + "80" : BRAND.gold + "30"}`, marginBottom: 32, boxShadow: pricingGlow ? `0 0 30px ${BRAND.gold}20` : "none", transition: "border-color 0.6s ease, box-shadow 0.6s ease" }}>
             <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: BRAND.white, marginBottom: 12, marginTop: 0 }}>You have clear opportunity. Choose how far you want to take it.</h3>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: BRAND.gray400, marginBottom: 28, lineHeight: 1.6, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>The free score shows where you stand. The next step determines how fast you move.</p>
 
