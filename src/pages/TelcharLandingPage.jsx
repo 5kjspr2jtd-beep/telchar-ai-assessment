@@ -957,7 +957,7 @@ function ROICalculatorSection() {
     setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   };
   const resetDefaults = () => { setAdopt("Medium"); setTeam("1–3"); setToolSpend("$0"); setIncludeToolCost(true); setRateOverrides({}); setShowRateSliders(false); };
-  const resetAll = () => { setCost(null); setHrs({}); resetDefaults(); setShowAdjust(false); setStep("questions"); };
+  const resetAll = () => { setCost(null); setHrs({}); resetDefaults(); setShowAdjust(false); setStep("questions"); setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
 
   return (
     <section ref={sectionRef} style={{ background: ROI_B.navy, borderTop: `1px solid ${ROI_B.navyLight}40`, borderBottom: `1px solid ${ROI_B.navyLight}40` }}>
@@ -968,11 +968,14 @@ function ROICalculatorSection() {
         style={{
           maxWidth: 1040, margin: "0 auto", width: "100%", boxSizing: "border-box",
           padding: mob ? "28px 20px" : "36px 32px",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
+          display: "grid",
+          gridTemplateColumns: "1fr auto 1fr",
+          alignItems: "center",
           cursor: "pointer", gap: 24,
         }}
       >
-        <div>
+        <div />
+        <div style={{ textAlign: "center" }}>
           <span style={{ fontFamily: ROI_F, fontSize: 12, fontWeight: 700, color: ROI_B.gold, letterSpacing: "0.12em", textTransform: "uppercase", display: "block", marginBottom: 8 }}>
             ROI CALCULATOR
           </span>
@@ -985,14 +988,16 @@ function ROICalculatorSection() {
             </p>
           )}
         </div>
-        <div style={{
-          width: 36, height: 36, borderRadius: 18, flexShrink: 0,
-          border: `1px solid ${ROI_B.navyLight}`,
-          background: open ? ROI_B.navyLight : "transparent",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          transition: "all 0.2s ease",
-        }}>
-          <span style={{ fontFamily: ROI_F, fontSize: 18, color: ROI_B.gray400, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.25s ease", display: "block", lineHeight: 1 }}>▾</span>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div style={{
+            width: 36, height: 36, borderRadius: 18, flexShrink: 0,
+            border: `1px solid ${ROI_B.navyLight}`,
+            background: open ? ROI_B.navyLight : "transparent",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "all 0.2s ease",
+          }}>
+            <span style={{ fontFamily: ROI_F, fontSize: 18, color: ROI_B.gray400, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.25s ease", display: "block", lineHeight: 1 }}>▾</span>
+          </div>
         </div>
       </div>
 
