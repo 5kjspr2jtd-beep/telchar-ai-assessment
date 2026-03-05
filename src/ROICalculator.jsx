@@ -291,6 +291,7 @@ export default function ROICalculator() {
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div style={{ minHeight: "100vh", background: `linear-gradient(170deg, ${B.navyDeep} 0%, ${B.navy} 100%)`, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <style>{`html, body, #root { margin: 0; padding: 0; background: ${B.navyDeep}; overflow-x: hidden; }`}</style>
       <div style={{ width: "100%", maxWidth: 680, margin: "0 auto", padding: mob ? "0 0 100px" : "0 24px 48px" }}>
 
         {/* ── Sticky header ── */}
@@ -310,7 +311,7 @@ export default function ROICalculator() {
 
           {/* ═══ INTRO ═══ */}
           {step === "intro" && (
-            <div style={{ paddingTop: mob ? 16 : 40, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div style={{ paddingTop: mob ? 16 : 40, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 620, margin: "0 auto" }}>
               <h1 style={{ fontFamily: F, fontSize: mob ? 24 : 30, fontWeight: 700, color: B.white, marginBottom: 10, marginTop: 0, lineHeight: 1.15 }}>What is manual work costing your business?</h1>
               <p style={{ fontFamily: F, fontSize: 14, color: B.gray400, marginBottom: 28, lineHeight: 1.55, maxWidth: 460 }}>
                 Answer a few questions about how your team spends time. Get a conservative, transparent estimate of what AI-assisted automation could recover annually.
