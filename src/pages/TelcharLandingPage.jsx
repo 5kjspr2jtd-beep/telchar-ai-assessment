@@ -481,6 +481,213 @@ function TierSection({ onCTA }) {
 }
 
 // ============================================================
+// SECTION: ROI TEASER
+// ============================================================
+function ROITeaserSection({ onCTA }) {
+  const isMobile = useIsMobile();
+  const [hours, setHours] = useState(null);
+  const [cost, setCost] = useState(null);
+  const [team, setTeam] = useState(null);
+
+  const HOUR_OPTS = [
+    { label: "<5 hrs/wk",    low: 2,  high: 5  },
+    { label: "5–10 hrs/wk",  low: 5,  high: 10 },
+    { label: "10–20 hrs/wk", low: 10, high: 20 },
+    { label: "20+ hrs/wk",   low: 20, high: 30 },
+  ];
+  const COST_OPTS = [
+    { label: "$25–$35/hr", low: 25, high: 35 },
+    { label: "$35–$50/hr", low: 35, high: 50 },
+    { label: "$50–$75/hr", low: 50, high: 75 },
+    { label: "$75+/hr",    low: 75, high: 95 },
+  ];
+  const TEAM_OPTS = [
+    { label: "1–3",    factor: 1.0  },
+    { label: "4–10",   factor: 0.95 },
+    { label: "11–25",  factor: 0.88 },
+    { label: "26–50",  factor: 0.80 },
+    { label: "51–100", factor: 0.72 },
+  ];
+
+  const result = (() => {
+    if (!hours || !cost || !team) return null;
+    const h = HOUR_OPTS.find(o => o.label === hours);
+    const c = COST_OPTS.find(o => o.label === cost);
+    const t = TEAM_OPTS.find(o => o.label === team);
+    if (!h || !c || !t) return null;
+    const recoveryRate = 0.30;
+    const annualLo = Math.round(h.low * recoveryRate * c.low * t.factor * 52 / 100) * 100;
+    const annualHi = Math.round(h.high * recoveryRate * c.high * t.factor * 52 / 100) * 100;
+    return { lo: annualLo, hi: annualHi };
+  })();
+
+  const inputsFilled = [hours, cost, team].filter(Boolean).length;
+
+  const chipStyle = (selected) => ({
+    fontFamily: font,
+    fontSize: isMobile ? 12 : 13,
+    fontWeight: selected ? 600 : 400,
+    padding: isMobile ? "7px 12px" : "8px 16px",
+    borderRadius: 8,
+    border: `1px solid ${selected ? BRAND.blue : BRAND.navyLight}`,
+    background: selected ? `${BRAND.blue}18` : BRAND.navyDeep,
+    color: selected ? BRAND.white : BRAND.gray400,
+    cursor: "pointer",
+    transition: "all 0.15s ease",
+    whiteSpace: "nowrap",
+  });
+
+  return (
+    <section style={{
+      background: BRAND.navy,
+      padding: isMobile ? "64px 20px" : "96px 32px",
+      borderTop: `1px solid ${BRAND.navyLight}40`,
+      borderBottom: `1px solid ${BRAND.navyLight}40`,
+    }}>
+      <div style={{ maxWidth: 760, margin: "0 auto" }}>
+
+        <div style={{ textAlign: "center", marginBottom: isMobile ? 36 : 48 }}>
+          <span style={{ fontFamily: font, fontSize: 12, fontWeight: 700, color: BRAND.gold, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+            QUICK ESTIMATE
+          </span>
+          <h2 style={{ fontFamily: font, fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: 700, color: BRAND.white, marginTop: 14, marginBottom: 12, lineHeight: 1.2, letterSpacing: "-0.01em" }}>
+            What could AI save your business?
+          </h2>
+          <p style={{ fontFamily: font, fontSize: 15, color: BRAND.gray400, lineHeight: 1.6, margin: 0 }}>
+            Three questions. Rough estimate in seconds.
+          </p>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 28, marginBottom: 36 }}>
+
+          <div>
+            <p style={{ fontFamily: font, fontSize: 13, fontWeight: 600, color: BRAND.gray300, marginBottom: 12, letterSpacing: "0.02em" }}>
+              How many hours per week does your team spend on repetitive tasks?
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {HOUR_OPTS.map(o => (
+                <button key={o.label} style={chipStyle(hours === o.label)} onClick={() => setHours(o.label)}
+                  onMouseOver={e => { if (hours !== o.label) e.currentTarget.style.borderColor = BRAND.gray500; }}
+                  onMouseOut={e => { if (hours !== o.label) e.currentTarget.style.borderColor = BRAND.navyLight; }}>
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p style={{ fontFamily: font, fontSize: 13, fontWeight: 600, color: BRAND.gray300, marginBottom: 12, letterSpacing: "0.02em" }}>
+              Average fully-loaded hourly cost of the people doing those tasks?
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {COST_OPTS.map(o => (
+                <button key={o.label} style={chipStyle(cost === o.label)} onClick={() => setCost(o.label)}
+                  onMouseOver={e => { if (cost !== o.label) e.currentTarget.style.borderColor = BRAND.gray500; }}
+                  onMouseOut={e => { if (cost !== o.label) e.currentTarget.style.borderColor = BRAND.navyLight; }}>
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p style={{ fontFamily: font, fontSize: 13, fontWeight: 600, color: BRAND.gray300, marginBottom: 12, letterSpacing: "0.02em" }}>
+              How many employees?
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {TEAM_OPTS.map(o => (
+                <button key={o.label} style={chipStyle(team === o.label)} onClick={() => setTeam(o.label)}
+                  onMouseOver={e => { if (team !== o.label) e.currentTarget.style.borderColor = BRAND.gray500; }}
+                  onMouseOut={e => { if (team !== o.label) e.currentTarget.style.borderColor = BRAND.navyLight; }}>
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        <div style={{
+          borderRadius: 12,
+          border: `1px solid ${result ? BRAND.gold + "30" : BRAND.navyLight + "50"}`,
+          background: result ? `linear-gradient(135deg, ${BRAND.navyLight}CC, ${BRAND.navy})` : BRAND.navyDeep,
+          padding: isMobile ? "24px 20px" : "32px 36px",
+          transition: "all 0.3s ease",
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          alignItems: isMobile ? "flex-start" : "center",
+          justifyContent: "space-between",
+          gap: 24,
+        }}>
+          <div style={{ flex: 1 }}>
+            {result ? (
+              <>
+                <p style={{ fontFamily: font, fontSize: 11, fontWeight: 700, color: BRAND.gold, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
+                  Conservative estimate
+                </p>
+                <div style={{ fontFamily: font, fontSize: isMobile ? 32 : 40, fontWeight: 700, color: BRAND.gold, lineHeight: 1, marginBottom: 8 }}>
+                  ${result.lo.toLocaleString()}–${result.hi.toLocaleString()}
+                </div>
+                <p style={{ fontFamily: font, fontSize: 13, color: BRAND.gray400, margin: 0, lineHeight: 1.5 }}>
+                  potential annual savings from AI-assisted automation
+                </p>
+              </>
+            ) : (
+              <>
+                <div style={{ fontFamily: font, fontSize: isMobile ? 28 : 36, fontWeight: 700, color: BRAND.navyLight, lineHeight: 1, marginBottom: 8 }}>
+                  $—
+                </div>
+                <p style={{ fontFamily: font, fontSize: 13, color: BRAND.gray500, margin: 0 }}>
+                  {inputsFilled === 0 ? "Answer the questions above to see your estimate" : `${3 - inputsFilled} more ${3 - inputsFilled === 1 ? "answer" : "answers"} needed`}
+                </p>
+              </>
+            )}
+          </div>
+
+          <div style={{ flexShrink: 0, width: isMobile ? "100%" : "auto" }}>
+            {result ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: isMobile ? "stretch" : "flex-end" }}>
+                <button onClick={onCTA} style={{
+                  fontFamily: font, fontSize: 15, fontWeight: 700,
+                  padding: "13px 28px", background: BRAND.blue, color: BRAND.white,
+                  border: "none", borderRadius: 10, cursor: "pointer", transition: "all 0.2s ease",
+                  boxShadow: `0 4px 20px ${BRAND.blue}30`,
+                  width: isMobile ? "100%" : "auto",
+                }}
+                  onMouseOver={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = `0 8px 28px ${BRAND.blue}40`; }}
+                  onMouseOut={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = `0 4px 20px ${BRAND.blue}30`; }}>
+                  Get your free assessment
+                </button>
+                <p style={{ fontFamily: font, fontSize: 11, color: BRAND.gray500, margin: 0, textAlign: isMobile ? "center" : "right" }}>
+                  See exactly where the savings are
+                </p>
+              </div>
+            ) : (
+              <div style={{
+                padding: "13px 28px", borderRadius: 10,
+                background: BRAND.navyLight, color: BRAND.gray500,
+                fontFamily: font, fontSize: 15, fontWeight: 600,
+                border: `1px solid ${BRAND.navyLight}`,
+                width: isMobile ? "100%" : "auto",
+                textAlign: "center",
+                boxSizing: "border-box",
+              }}>
+                Get your free assessment
+              </div>
+            )}
+          </div>
+        </div>
+
+        <p style={{ fontFamily: font, fontSize: 11, color: BRAND.gray500, textAlign: "center", marginTop: 16, lineHeight: 1.5 }}>
+          Rough estimate only. Based on conservative recovery rates across common SMB task categories.
+        </p>
+
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
 // SECTION: FIT CHECK
 // ============================================================
 function WhoSection() {
@@ -769,6 +976,7 @@ export default function TelcharLandingPage() {
       <AuthorityBand />
       <ProofSection onCTA={handleCTA} />
       <TierSection onCTA={handleCTA} />
+      <ROITeaserSection onCTA={handleCTA} />
       <WhoSection />
       <StepsSection />
       <CTASection onCTA={handleCTA} />
