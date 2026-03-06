@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { TELCHAR as P, FONT, MONO, scoreColor, scoreTier, GOOGLE_FONTS_URL } from "../design/telcharDesign";
+import { TELCHAR as P, FONT, MONO, scoreColor, scoreTier, GOOGLE_FONTS_URL, TEXT, NAVY_TEXT, TYPE, CTA, OPTION_CARD } from "../design/telcharDesign";
 
 // ============================================================
 // TELCHAR AI - AI READINESS ASSESSMENT v2
@@ -229,7 +229,7 @@ const QUESTIONS = [
     autoAdvance: true,
     conditional: (answers) => Array.isArray(answers.growth_priority) && answers.growth_priority.includes("Prepare for exit"),
     options: [
-      "Actively preparing to sell in the next 12\u201324 months",
+      "Actively preparing to sell in the next 12–24 months",
       "Exploring potential buyers or strategic partners",
       "Planning to transition ownership internally",
       "Unsure / evaluating options",
@@ -872,7 +872,7 @@ function ScoreDisplay({ score, label, isOverall = false }) {
       <div style={{ fontSize: isOverall ? 96 : 48, fontWeight: 700, fontFamily: FONT, color: color, lineHeight: 1, letterSpacing: "-0.02em" }}>
         {animatedScore}
       </div>
-      <div style={{ fontSize: isOverall ? 14 : 11, fontFamily: MONO, color: P.inkFaint, marginTop: isOverall ? 4 : 4, letterSpacing: "0.08em" }}>
+      <div style={{ fontSize: isOverall ? 15 : 12, fontFamily: MONO, color: P.inkFaint, marginTop: isOverall ? 4 : 4, letterSpacing: "0.08em" }}>
         out of 100
       </div>
       {/* Score bar */}
@@ -952,7 +952,7 @@ function LogoMark({ size = "default", showName = true, light = false }) {
     <div style={{ display: "flex", alignItems: "center", gap: size === "large" ? 12 : 8 }}>
       <img src={ANVIL_URL} alt="Telchar AI" style={{ height: h }} />
       {showName && (
-        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: size === "large" ? 22 : 15, color: light ? P.ink : "#fff", letterSpacing: "0.08em", textTransform: "uppercase" }}>TELCHAR AI</span>
+        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: size === "large" ? 24 : 15, color: light ? P.ink : "#fff", letterSpacing: "0.08em", textTransform: "uppercase" }}>TELCHAR AI</span>
       )}
     </div>
   );
@@ -976,7 +976,7 @@ function LandingPage({ onStart }) {
             AI Readiness Assessment
           </h1>
 
-          <p style={{ fontFamily: FONT, fontSize: "clamp(16px, 2.5vw, 19px)", color: "#E6EEF8", lineHeight: 1.7, marginBottom: 12, maxWidth: 580, marginLeft: "auto", marginRight: "auto" }}>
+          <p style={{ fontFamily: FONT, fontSize: "clamp(16px, 2.5vw, 20px)", color: "#E6EEF8", lineHeight: 1.7, marginBottom: 12, maxWidth: 580, marginLeft: "auto", marginRight: "auto" }}>
             Find out where AI can make the biggest impact on your business. Answer a few questions about how you operate today and get a personalized scorecard with specific recommendations.
           </p>
 
@@ -990,7 +990,7 @@ function LandingPage({ onStart }) {
             Takes about 4 minutes &middot; Free &middot; Confidential
           </div>
 
-          <button onClick={onStart} style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "14px 32px", background: P.gold, color: "#fff", border: "none", cursor: "pointer", transition: "all 0.2s ease" }}
+          <button onClick={onStart} style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: P.gold, color: "#fff", border: "none", cursor: "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
             onMouseOver={(e) => { e.target.style.background = P.goldLight; }}
             onMouseOut={(e) => { e.target.style.background = P.gold; }}
           >
@@ -998,7 +998,7 @@ function LandingPage({ onStart }) {
           </button>
 
           <div style={{ marginTop: 40, display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
-            {[{ num: "18", text: "Questions" }, { num: "5", text: "AI Categories Scored" }, { num: "100%", text: "Confidential" }].map((item, i) => (
+            {[{ num: String(QUESTIONS.length), text: "Questions" }, { num: "5", text: "AI Categories Scored" }, { num: "100%", text: "Confidential" }].map((item, i) => (
               <div key={i} style={{ textAlign: "center", display: "flex", alignItems: "center", gap: 8 }}>
                 <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 10,5 5,10 0,5" fill={P.navy} stroke={P.goldLight} strokeWidth="1.5" /></svg>
                 <div>
@@ -1189,7 +1189,7 @@ function AssessmentFlow({ onComplete }) {
           )}
 
           <div style={{ opacity: fadeState === "in" ? 1 : 0, transform: fadeState === "in" ? "translateY(0)" : "translateY(8px)", transition: "all 0.25s ease" }}>
-            <h2 style={{ fontFamily: FONT, fontSize: "clamp(20px, 3vw, 26px)", fontWeight: 600, color: P.ink, lineHeight: 1.3, marginBottom: 10 }}>
+            <h2 style={{ fontFamily: FONT, fontSize: "clamp(20px, 3vw, 24px)", fontWeight: 600, color: P.ink, lineHeight: 1.3, marginBottom: 10 }}>
               {question.label}
             </h2>
             <p style={{ fontFamily: FONT, fontSize: 12, color: P.inkLight, marginBottom: 28, letterSpacing: "0.01em" }}>
@@ -1281,7 +1281,7 @@ function AssessmentFlow({ onComplete }) {
               </div>
             )}
 
-            {error && <p style={{ fontFamily: FONT, fontSize: 14, color: P.red, marginTop: 12 }}>{error}</p>}
+            {error && <p style={{ fontFamily: FONT, fontSize: 15, color: P.red, marginTop: 12 }}>{error}</p>}
 
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 32, gap: 16 }}>
               <button onClick={handleBack} disabled={currentIndex === 0}
@@ -1290,7 +1290,7 @@ function AssessmentFlow({ onComplete }) {
               </button>
               {showContinueButton && (
                 <button onClick={handleNext}
-                  style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "14px 32px", background: P.gold, border: "none", color: "#fff", cursor: "pointer", transition: "all 0.15s ease" }}
+                  style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: P.gold, border: "none", color: "#fff", cursor: "pointer", transition: "all 0.15s ease" }}
                   onMouseOver={(e) => { e.target.style.background = P.goldLight; }}
                   onMouseOut={(e) => { e.target.style.background = P.gold; }}
                 >
@@ -1317,8 +1317,8 @@ function QuickWinsChart({ quickWins, companyName }) {
 
   return (
     <div style={{ marginBottom: 48 }}>
-      <h2 style={{ fontFamily: FONT, fontSize: 22, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 8 }}>{companyName ? `Where ${companyName} Should Start` : "Where to Start"}</h2>
-      <p style={{ fontFamily: FONT, fontSize: 14, color: P.inkLight, marginBottom: 24, lineHeight: 1.5 }}>Ranked by impact. Click any row for details.</p>
+      <h2 style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 8 }}>{companyName ? `Where ${companyName} Should Start` : "Where to Start"}</h2>
+      <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginBottom: 24, lineHeight: 1.5 }}>Ranked by impact. Click any row for details.</p>
       <div style={{ display: "flex", flexDirection: "column" }}>
         {items.map((win, i) => (
           <div key={i} onClick={() => setSelected(selected === i ? null : i)} style={{ cursor: "pointer", padding: "16px 0", borderBottom: `1px solid ${P.paperRule}`, transition: "all 0.15s ease", display: "grid", gridTemplateColumns: "1fr auto auto", alignItems: "center", gap: 14 }}>
@@ -1326,7 +1326,7 @@ function QuickWinsChart({ quickWins, companyName }) {
                 <svg width="10" height="10" viewBox="0 0 10 10" style={{ flexShrink: 0 }}>
                   <polygon points="5,0 10,5 5,10 0,5" fill={P.gold} stroke={P.gold} strokeWidth="1.5" />
                 </svg>
-                <div style={{ fontFamily: FONT, fontSize: 14, fontWeight: 600, color: P.ink, minWidth: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{win.title}</div>
+                <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 600, color: P.ink, minWidth: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{win.title}</div>
               </div>
               <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#fff", background: P.inkMid, padding: "3px 8px", whiteSpace: "nowrap" }}>#{i + 1} Priority</span>
               <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkFaint, whiteSpace: "nowrap", minWidth: 100, textAlign: "right" }}>{win.category}</div>
@@ -1336,11 +1336,11 @@ function QuickWinsChart({ quickWins, companyName }) {
 
       {selected !== null && (
         <div style={{ marginTop: 12, background: P.paperShade, borderLeft: `3px solid ${P.gold}`, padding: "20px 24px", position: "relative" }}>
-          <button onClick={() => setSelected(null)} style={{ position: "absolute", top: 12, right: 14, background: "none", border: "none", color: P.inkFaint, fontSize: 18, cursor: "pointer", fontFamily: FONT, lineHeight: 1 }}>{"\u2715"}</button>
+          <button onClick={() => setSelected(null)} style={{ position: "absolute", top: 12, right: 14, background: "none", border: "none", color: P.inkFaint, fontSize: 20, cursor: "pointer", fontFamily: FONT, lineHeight: 1 }}>{"\u2715"}</button>
           <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: P.inkFaint, marginBottom: 6, fontFamily: FONT }}>{items[selected].category}</div>
-          <div style={{ fontFamily: FONT, fontSize: 18, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 4, paddingRight: 28 }}>{items[selected].title}</div>
+          <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 4, paddingRight: 28 }}>{items[selected].title}</div>
           <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 600, color: P.inkMid, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 12 }}>#{selected + 1} Priority</div>
-          <div style={{ fontFamily: FONT, fontSize: 14, color: P.inkMid, lineHeight: 1.7 }}>{items[selected].desc}</div>
+          <div style={{ fontFamily: FONT, fontSize: 15, color: P.inkMid, lineHeight: 1.7 }}>{items[selected].desc}</div>
         </div>
       )}
     </div>
@@ -1376,8 +1376,8 @@ function ReportSection({ section, defaultOpen = false, locked = false, freeInsig
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, minWidth: 140 }}>
             <svg width="12" height="12" viewBox="0 0 12 12" style={{ opacity: 0.4 }}><path d="M9 5V4a3 3 0 00-6 0v1H2v7h8V5H9zM4 4a2 2 0 014 0v1H4V4z" fill={P.inkLight}/></svg>
             <button onClick={onUpgrade}
-              style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "14px 32px", background: "transparent", color: P.navy, border: `1px solid ${P.navy}`, cursor: "pointer", transition: "all 0.2s ease", whiteSpace: "nowrap" }}
-              onMouseOver={(e) => { e.target.style.background = P.navy + "0A"; }}
+              style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: "transparent", color: P.gold, border: `1px solid ${P.gold}`, cursor: "pointer", transition: "all 0.2s ease", whiteSpace: "nowrap" }}
+              onMouseOver={(e) => { e.target.style.background = P.gold + "0A"; }}
               onMouseOut={(e) => { e.target.style.background = "transparent"; }}
             >
               Unlock
@@ -1389,14 +1389,14 @@ function ReportSection({ section, defaultOpen = false, locked = false, freeInsig
         <div style={{ padding: "0 0 24px", borderTop: `1px solid ${P.paperRule}` }}>
           <div style={{ paddingTop: 20, marginBottom: freeInsight ? 0 : 16 }}>
             <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: P.inkFaint, marginBottom: 6, fontFamily: FONT }}>What This Tells Us</div>
-            <div style={{ fontFamily: FONT, fontSize: 14, color: P.inkMid, lineHeight: 1.65 }}>{section.interpretation}</div>
+            <div style={{ fontFamily: FONT, fontSize: 15, color: P.inkMid, lineHeight: 1.65 }}>{section.interpretation}</div>
           </div>
           {freeInsight && (
             <div style={{ marginTop: 16, padding: "20px 24px", background: P.paperShade, borderLeft: `3px solid ${P.gold}` }}>
               <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginBottom: 8 }}>Detailed execution steps and tool recommendations available in the full report.</div>
               <button onClick={onUpgrade}
-                style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "14px 32px", background: "transparent", color: P.navy, border: `1px solid ${P.navy}`, cursor: "pointer", transition: "all 0.2s ease" }}
-                onMouseOver={(e) => { e.target.style.background = P.navy + "0A"; }}
+                style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: "transparent", color: P.gold, border: `1px solid ${P.gold}`, cursor: "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
+                onMouseOver={(e) => { e.target.style.background = P.gold + "0A"; }}
                 onMouseOut={(e) => { e.target.style.background = "transparent"; }}
               >
                 Unlock Full Report
@@ -1407,11 +1407,11 @@ function ReportSection({ section, defaultOpen = false, locked = false, freeInsig
             <>
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: P.inkFaint, marginBottom: 6, fontFamily: FONT }}>What Leading Companies Are Doing</div>
-                <div style={{ fontFamily: FONT, fontSize: 14, color: P.inkMid, lineHeight: 1.65 }}>{section.benchmark}</div>
+                <div style={{ fontFamily: FONT, fontSize: 15, color: P.inkMid, lineHeight: 1.65 }}>{section.benchmark}</div>
               </div>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: P.inkFaint, marginBottom: 6, fontFamily: FONT }}>Your Opportunity</div>
-                <div style={{ fontFamily: FONT, fontSize: 14, color: P.inkMid, lineHeight: 1.65 }}>{section.opportunity}</div>
+                <div style={{ fontFamily: FONT, fontSize: 15, color: P.inkMid, lineHeight: 1.65 }}>{section.opportunity}</div>
               </div>
             </>
           )}
@@ -1473,7 +1473,7 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
             <LogoMark />
           </div>
           <h1 style={{ fontFamily: FONT, fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 700, color: "#fff", lineHeight: 1.3, marginBottom: 8 }}>Telchar AI Readiness Index<sup style={{ fontSize: "0.45em", verticalAlign: "super", opacity: 0.7 }}>{"\u2122"}</sup></h1>
-          <p style={{ fontFamily: FONT, fontSize: 17, color: "#9BB1C7" }}>{answers.company_name}{answers.industry ? ` \u00B7 ${answers.industry}` : ""}</p>
+          <p style={{ fontFamily: FONT, fontSize: 16, color: "#B8C2CC" }}>{answers.company_name}{answers.industry ? ` \u00B7 ${answers.industry}` : ""}</p>
         </div>
       </div>
 
@@ -1485,7 +1485,7 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
           <div style={{ background: P.paperShade, padding: "24px 32px 28px", textAlign: "center", marginBottom: 32, border: `1px solid ${P.paperRule}` }}>
             <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: P.inkFaint, marginBottom: 16 }}>AI READINESS SCORE</div>
             <ScoreDisplay score={scores.overall} isOverall />
-            <div style={{ fontFamily: FONT, fontSize: 22, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginTop: 12 }}>{getScoreLabel(scores.overall)}</div>
+            <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginTop: 12 }}>{getScoreLabel(scores.overall)}</div>
             <p style={{ fontFamily: FONT, fontSize: 16, color: P.inkLight, marginTop: 12, maxWidth: 560, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
               {(() => {
                 const cn = answers.company_name || "your business";
@@ -1522,8 +1522,8 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
 
           {/* Report sections */}
           <div style={{ marginBottom: 48 }}>
-            <h2 style={{ fontFamily: FONT, fontSize: 22, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 8 }}>{answers.company_name ? `${answers.company_name}: AI Readiness Report` : "AI Readiness Report"}</h2>
-            <p style={{ fontFamily: FONT, fontSize: 14, color: P.inkLight, marginBottom: 20, lineHeight: 1.5 }}>{isPro ? "Full breakdown ranked by impact. Your weakest areas appear first." : "Your top 2 priority areas ranked by impact. Unlock detailed execution steps and full action plan."}</p>
+            <h2 style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 8 }}>{answers.company_name ? `${answers.company_name}: AI Readiness Report` : "AI Readiness Report"}</h2>
+            <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginBottom: 20, lineHeight: 1.5 }}>{isPro ? "Full breakdown ranked by impact. Your weakest areas appear first." : "Your top 2 priority areas ranked by impact. Unlock detailed execution steps and full action plan."}</p>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {generatePDFContent(answers, scores, quickWins).map((section, i) => (
                 <ReportSection key={i} section={section} defaultOpen={isPro ? i < 5 : false} locked={isPro ? false : i >= 2} freeInsight={!isPro && i < 2} onUpgrade={scrollToPricing} />
@@ -1537,16 +1537,16 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
           {/* Paywall / pricing */}
           {!isPro && (
             <div ref={pricingRef} style={{ background: P.paperShade, padding: "40px 32px", textAlign: "center", marginBottom: 32, borderTop: `1px solid ${pricingGlow ? P.gold : P.paperRule}`, borderRight: `1px solid ${pricingGlow ? P.gold : P.paperRule}`, borderBottom: `1px solid ${pricingGlow ? P.gold : P.paperRule}`, borderLeft: `3px solid ${P.gold}`, transition: "border-color 0.6s ease" }}>
-              <h3 style={{ fontFamily: FONT, fontSize: 22, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 12, marginTop: 0 }}>You have clear opportunity. Choose how far you want to take it.</h3>
+              <h3 style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 12, marginTop: 0 }}>You have clear opportunity. Choose how far you want to take it.</h3>
               <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginBottom: 28, lineHeight: 1.6, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>The free score shows where you stand. The next step determines how fast you move.</p>
 
               <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: P.inkLight, marginBottom: 14, fontFamily: FONT }}>Recommended for businesses ready to implement</div>
               <button onClick={handleAdvancedCheckout} disabled={advancedLoading}
-                style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "14px 32px", background: advancedLoading ? P.inkFaint : P.gold, color: "#fff", border: "none", cursor: advancedLoading ? "default" : "pointer", transition: "all 0.2s ease" }}
+                style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: advancedLoading ? P.inkFaint : P.gold, color: "#fff", border: "none", cursor: advancedLoading ? "default" : "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
                 onMouseOver={(e) => { if (!advancedLoading) { e.target.style.background = P.goldLight; } }}
                 onMouseOut={(e) => { if (!advancedLoading) { e.target.style.background = P.gold; } }}
               >
-                {advancedLoading ? "Redirecting..." : "Get the 90-Day Execution Plan \u2013 $150"}
+                {advancedLoading ? "Redirecting..." : "Get the 90-Day Execution Plan – $150"}
               </button>
               <p style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginTop: 14, maxWidth: 480, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>Everything in the full report plus a structured 90-day roadmap with sequencing, KPIs, ownership guidance, and implementation pacing.</p>
               <p style={{ fontFamily: FONT, fontSize: 12, color: P.inkFaint, marginTop: 8 }}>Without a structured roadmap, most teams delay action and lose momentum.</p>
@@ -1556,11 +1556,11 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
 
               <div style={{ marginTop: 28, paddingTop: 24, borderTop: `1px solid ${P.paperRule}` }}>
                 <button onClick={handleCheckout} disabled={checkoutLoading}
-                  style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "14px 32px", background: "transparent", color: checkoutLoading ? P.inkFaint : P.navy, border: `1px solid ${checkoutLoading ? P.paperRule : P.navy}`, cursor: checkoutLoading ? "default" : "pointer", transition: "all 0.2s ease" }}
+                  style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: "transparent", color: checkoutLoading ? P.inkFaint : P.gold, border: `1px solid ${checkoutLoading ? P.paperRule : P.gold}`, cursor: checkoutLoading ? "default" : "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
                   onMouseOver={(e) => { if (!checkoutLoading) { e.target.style.background = P.navy + "0A"; } }}
                   onMouseOut={(e) => { if (!checkoutLoading) { e.target.style.background = "transparent"; } }}
                 >
-                  {checkoutLoading ? "Redirecting..." : "Unlock Full Report \u2013 $50"}
+                  {checkoutLoading ? "Redirecting..." : "Unlock Full Report – $50"}
                 </button>
                 <p style={{ fontFamily: FONT, fontSize: 13, color: P.inkFaint, marginTop: 10 }}>Detailed action steps and tool guidance you can execute immediately.</p>
                 <p style={{ fontFamily: FONT, fontSize: 12, color: P.inkFaint, marginTop: 4 }}>For teams who prefer to determine sequencing internally.</p>
@@ -1578,17 +1578,17 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
 
           {isPro && !isAdvanced && (
             <div style={{ background: P.paperShade, padding: "40px 32px", textAlign: "center", borderTop: `1px solid ${P.paperRule}`, borderRight: `1px solid ${P.paperRule}`, borderBottom: `1px solid ${P.paperRule}`, borderLeft: `3px solid ${P.green}`, marginBottom: 32 }}>
-              <h3 style={{ fontFamily: FONT, fontSize: 22, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 12, marginTop: 0 }}>Pro Report Unlocked</h3>
+              <h3 style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 12, marginTop: 0 }}>Pro Report Unlocked</h3>
               <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginBottom: 16, lineHeight: 1.6, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>Your full AI Readiness Report with execution detail is available above.</p>
               <p style={{ fontFamily: FONT, fontSize: 12, color: P.inkFaint, marginBottom: 24, fontStyle: "italic" }}>This report is generated from your assessment responses. It does not include external company research.</p>
               <div style={{ paddingTop: 16, borderTop: `1px solid ${P.paperRule}` }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: P.inkLight, marginBottom: 14, fontFamily: FONT }}>Recommended for businesses ready to implement</div>
                 <button onClick={handleAdvancedCheckout} disabled={advancedLoading}
-                  style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "14px 32px", background: advancedLoading ? P.inkFaint : P.gold, color: "#fff", border: "none", cursor: advancedLoading ? "default" : "pointer", transition: "all 0.2s ease" }}
+                  style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: advancedLoading ? P.inkFaint : P.gold, color: "#fff", border: "none", cursor: advancedLoading ? "default" : "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
                   onMouseOver={(e) => { if (!advancedLoading) { e.target.style.background = P.goldLight; } }}
                   onMouseOut={(e) => { if (!advancedLoading) { e.target.style.background = P.gold; } }}
                 >
-                  {advancedLoading ? "Redirecting..." : "Get the 90-Day Execution Plan \u2013 $150"}
+                  {advancedLoading ? "Redirecting..." : "Get the 90-Day Execution Plan – $150"}
                 </button>
                 <p style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginTop: 14, maxWidth: 480, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>Everything in the full report plus a structured 90-day roadmap with sequencing, KPIs, ownership guidance, and implementation pacing.</p>
                 <p style={{ fontFamily: FONT, fontSize: 12, color: P.inkFaint, marginTop: 8 }}>Without a structured roadmap, most teams delay action and lose momentum.</p>
@@ -1598,7 +1598,7 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
 
           {isAdvanced && (
             <div style={{ background: P.paperShade, padding: "40px 32px", textAlign: "center", borderTop: `1px solid ${P.paperRule}`, borderRight: `1px solid ${P.paperRule}`, borderBottom: `1px solid ${P.paperRule}`, borderLeft: `3px solid ${P.green}`, marginBottom: 32 }}>
-              <h3 style={{ fontFamily: FONT, fontSize: 22, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 12, marginTop: 0 }}>Advanced Plan Unlocked</h3>
+              <h3 style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 12, marginTop: 0 }}>Advanced Plan Unlocked</h3>
               <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginBottom: 16, lineHeight: 1.6, maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>Your complete AI Readiness Report with 90-day roadmap and implementation guidance is available above.</p>
               <p style={{ fontFamily: FONT, fontSize: 12, color: P.inkFaint, marginBottom: 16, fontStyle: "italic", maxWidth: 460, marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>This plan is built from your self-reported inputs and does not include external company research or bespoke competitive analysis.</p>
               <p style={{ fontFamily: FONT, fontSize: 13, color: P.inkFaint, lineHeight: 1.5 }}>Limited consulting engagements are available by application for businesses that require hands-on implementation support.</p>
@@ -1607,10 +1607,10 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
 
           {/* Implementation support */}
           <div style={{ borderTop: `1px solid ${P.paperRule}`, marginTop: 16, paddingTop: 32, marginBottom: 32, textAlign: "center" }}>
-            <h3 style={{ fontFamily: FONT, fontSize: 18, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 12, marginTop: 0 }}>Need direct implementation support?</h3>
-            <p style={{ fontFamily: FONT, fontSize: 14, color: P.inkLight, lineHeight: 1.65, maxWidth: 500, marginLeft: "auto", marginRight: "auto", marginBottom: 6 }}>For businesses ready to move beyond planning into disciplined execution, hands-on advisory support is available.</p>
-            <p style={{ fontFamily: FONT, fontSize: 14, color: P.inkLight, lineHeight: 1.65, maxWidth: 500, marginLeft: "auto", marginRight: "auto", marginBottom: 16 }}>These engagements are structured and execution-focused. Not every business will be the right fit, and that is intentional. The goal is alignment, clarity, and measurable progress.</p>
-            <span onClick={() => { alert("In production: routes to implementation support page."); }} style={{ fontFamily: FONT, fontSize: 14, color: P.inkMid, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "3px" }}>Learn about implementation support</span>
+            <h3 style={{ fontFamily: FONT, fontSize: 20, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 12, marginTop: 0 }}>Need direct implementation support?</h3>
+            <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, lineHeight: 1.65, maxWidth: 500, marginLeft: "auto", marginRight: "auto", marginBottom: 6 }}>For businesses ready to move beyond planning into disciplined execution, hands-on advisory support is available.</p>
+            <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, lineHeight: 1.65, maxWidth: 500, marginLeft: "auto", marginRight: "auto", marginBottom: 16 }}>These engagements are structured and execution-focused. Not every business will be the right fit, and that is intentional. The goal is alignment, clarity, and measurable progress.</p>
+            <span onClick={() => { alert("In production: routes to implementation support page."); }} style={{ fontFamily: FONT, fontSize: 15, color: P.inkMid, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "3px" }}>Learn about implementation support</span>
           </div>
 
         </div>

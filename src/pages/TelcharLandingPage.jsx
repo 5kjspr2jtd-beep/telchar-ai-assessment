@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { TELCHAR as P, FONT, MONO, GOOGLE_FONTS_URL, scoreColor, Diamond, Rule, SecLabel } from "../design/telcharDesign";
+import { TELCHAR as P, FONT, MONO, GOOGLE_FONTS_URL, scoreColor, Diamond, Rule, SecLabel, TEXT, NAVY_TEXT, TYPE, CTA, OPTION_CARD } from "../design/telcharDesign";
 
 // ─────────────────────────────────────────────────────────────
 // TELCHAR AI · Landing Page
@@ -46,7 +46,7 @@ function HeroSection({ onCTA }) {
 
   return (
     <section style={{
-      minHeight: "100vh", color: "#E6EEF8",
+      minHeight: "100vh", color: "#D8DEE9",
       background: P.navy,
       display: "flex", flexDirection: "column", position: "relative", overflow: "hidden",
     }}>
@@ -64,7 +64,7 @@ function HeroSection({ onCTA }) {
           fontFamily: FONT, fontSize: 12, fontWeight: 700,
           letterSpacing: "0.12em", textTransform: "uppercase",
           height: 36, padding: "0 20px", lineHeight: 1,
-          background: "transparent", color: "#E6EEF8",
+          background: "transparent", color: "#D8DEE9",
           border: `1px solid ${P.navyDim}`, cursor: "pointer",
           transition: "all 0.2s ease", whiteSpace: "nowrap",
         }}>
@@ -82,7 +82,7 @@ function HeroSection({ onCTA }) {
       }}>
         <div style={{ maxWidth: 780, textAlign: "center" }}>
           <p style={{
-            fontFamily: FONT, fontSize: isMobile ? 13 : 14, color: "#9BB1C7",
+            fontFamily: FONT, fontSize: isMobile ? 13 : 15, color: "#B8C2CC",
             marginBottom: 24, letterSpacing: "0.02em", lineHeight: 1.7,
           }}>
             Most businesses spend thousands on AI tools before knowing what will actually improve their business.
@@ -96,7 +96,7 @@ function HeroSection({ onCTA }) {
             marginBottom: isMobile ? 20 : 32,
           }}>
             <span style={{
-              fontFamily: FONT, fontSize: isMobile ? 10 : 12, fontWeight: 700,
+              fontFamily: FONT, fontSize: 12, fontWeight: 700,
               color: P.goldLight, letterSpacing: "0.14em", textTransform: "uppercase",
             }}>
               AI consulting for businesses with 5 to 100 employees
@@ -113,7 +113,7 @@ function HeroSection({ onCTA }) {
           </h1>
 
           <p style={{
-            fontFamily: FONT, fontSize: isMobile ? 12 : 13, color: "#9BB1C7",
+            fontFamily: FONT, fontSize: isMobile ? 12 : 13, color: "#B8C2CC",
             marginBottom: 32, letterSpacing: "0.02em", lineHeight: 1.6,
           }}>
             Built by Telchar AI using enterprise-tested AI methodology adapted for small operators.
@@ -128,26 +128,25 @@ function HeroSection({ onCTA }) {
             {["Scored across 5 categories", "Free instant results", "Optional deep dive reports"].map((item, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <Diamond size={5} fill={P.goldLight} stroke="none" sw={0} />
-                <span style={{ fontFamily: FONT, fontSize: isMobile ? 13 : 14, color: "#E6EEF8" }}>{item}</span>
+                <span style={{ fontFamily: FONT, fontSize: isMobile ? 13 : 15, color: "#D8DEE9" }}>{item}</span>
               </div>
             ))}
           </div>
 
           <div style={{ textAlign: "center" }}>
             <button onClick={onCTA} style={{
-              fontFamily: FONT, fontSize: 12, fontWeight: 700,
-              letterSpacing: "0.12em", textTransform: "uppercase",
-              padding: "14px 32px", minWidth: 280,
-              background: P.gold, color: "#fff",
-              border: "none", cursor: "pointer", transition: "all 0.2s ease",
-              minHeight: isMobile ? 48 : "auto",
+              fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+              background: P.gold, color: "#fff", fontSize: 13, fontWeight: 600,
+              letterSpacing: "0.10em", textTransform: "uppercase",
+              border: "none", cursor: "pointer", margin: "24px auto",
+              transition: "all 0.2s ease",
             }}>
               Start Free Assessment
             </button>
           </div>
 
           <p style={{
-            fontFamily: FONT, fontSize: 12, color: "#9BB1C7", marginTop: 16,
+            fontFamily: FONT, fontSize: 12, color: "#B8C2CC", marginTop: 16,
             letterSpacing: "0.04em",
           }}>
             Free. 5 minutes. No login required.
@@ -167,7 +166,7 @@ function HeroSection({ onCTA }) {
       {/* Scroll indicator */}
       {!isMobile && (
         <div style={{ position: "absolute", bottom: 28, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-          <span style={{ fontFamily: FONT, fontSize: 12, color: "#9BB1C7", letterSpacing: "0.22em", textTransform: "uppercase" }}>Learn more</span>
+          <span style={{ fontFamily: FONT, fontSize: 12, color: "#B8C2CC", letterSpacing: "0.22em", textTransform: "uppercase" }}>Learn more</span>
           <div style={{ width: 1, height: 28, background: P.navyDim }} />
         </div>
       )}
@@ -242,7 +241,7 @@ function ProofSection({ onCTA }) {
                 </div>
                 <div style={{ flex: 1, marginLeft: 8 }}>
                   <div style={{ background: P.navyFaint, padding: "4px 14px", maxWidth: 260 }}>
-                    <span style={{ fontFamily: MONO, fontSize: 12, color: "#E6EEF8", letterSpacing: "0.04em" }}>telchar.ai/report</span>
+                    <span style={{ fontFamily: MONO, fontSize: 12, color: "#D8DEE9", letterSpacing: "0.04em" }}>telchar.ai/report</span>
                   </div>
                 </div>
               </div>
@@ -277,12 +276,11 @@ function ProofSection({ onCTA }) {
 
             <div style={{ marginTop: 14 }}>
               <button onClick={onCTA} style={{
-                fontFamily: FONT, fontSize: 12, fontWeight: 700,
-                letterSpacing: "0.12em", textTransform: "uppercase",
-                padding: "14px 32px",
-                background: P.gold, color: "#fff",
-                border: "none", cursor: "pointer", transition: "all 0.2s ease",
-                width: "auto", minWidth: 280,
+                fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+                background: P.gold, color: "#fff", fontSize: 13, fontWeight: 600,
+                letterSpacing: "0.10em", textTransform: "uppercase",
+                border: "none", cursor: "pointer", margin: "24px auto",
+                transition: "all 0.2s ease",
               }}>
                 Start Free Assessment
               </button>
@@ -345,7 +343,7 @@ function TierSection({ onCTA }) {
           }}>
             Every assessment starts free
           </h2>
-          <p style={{ fontFamily: FONT, fontSize: 14, color: P.inkLight, marginTop: 14, lineHeight: 1.7, margin: "14px 0 0" }}>
+          <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginTop: 14, lineHeight: 1.7, margin: "14px 0 0" }}>
             Answer the same 18 questions. Choose how deep you want the analysis.
           </p>
         </div>
@@ -368,7 +366,7 @@ function TierSection({ onCTA }) {
                   </h3>
                   {tier.featured && (
                     <span style={{
-                      fontFamily: FONT, fontSize: 7.5, fontWeight: 700,
+                      fontFamily: FONT, fontSize: 12, fontWeight: 700,
                       color: P.goldLight, letterSpacing: "0.16em", textTransform: "uppercase",
                       background: P.gold + "15", padding: "3px 8px",
                     }}>Start here</span>
@@ -405,12 +403,11 @@ function TierSection({ onCTA }) {
 
               {tier.featured && (
                 <button onClick={onCTA} style={{
-                  fontFamily: FONT, fontSize: 12, fontWeight: 700,
-                  letterSpacing: "0.12em", textTransform: "uppercase",
-                  padding: "14px 32px", marginTop: 24,
-                  background: P.gold, color: "#fff",
-                  border: "none", cursor: "pointer",
-                  transition: "all 0.2s ease", width: "auto", minWidth: 280,
+                  fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+                  background: P.gold, color: "#fff", fontSize: 13, fontWeight: 600,
+                  letterSpacing: "0.10em", textTransform: "uppercase",
+                  border: "none", cursor: "pointer", margin: "24px auto",
+                  transition: "all 0.2s ease",
                 }}>
                   Start Free Assessment
                 </button>
@@ -483,10 +480,10 @@ function RCChip({ label, selected, onClick, small }) {
   return (
     <button onClick={onClick}
       style={{
-        fontFamily: FONT, fontSize: small ? 12 : 13, fontWeight: selected ? 700 : 500,
+        fontFamily: FONT, fontSize: small ? 12 : 13, fontWeight: selected ? 600 : 500,
         padding: "10px 8px",
-        background: selected ? P.gold + "22" : P.paperShade,
-        border: `1.5px solid ${selected ? P.gold : P.paperRule}`,
+        background: selected ? P.goldFaint : "transparent",
+        border: selected ? "2px solid " + P.gold : "1px solid #D6CCB8",
         color: selected ? P.ink : P.inkMid,
         cursor: "pointer", transition: "all 0.12s ease",
         display: "flex", alignItems: "center", justifyContent: "center",
@@ -520,7 +517,7 @@ function RCCatRow({ label, hLo, hHi, sLo, sHi, rateLo, rateHi, mob }) {
           <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: P.ink }}>{label}</div>
           <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginTop: 3 }}>{hLo}–{hHi} hrs/wk at {rc_pct(rateLo)}–{rc_pct(rateHi)}%</div>
         </div>
-        <div style={{ fontFamily: FONT, fontSize: 14, fontWeight: 700, color: P.green, whiteSpace: "nowrap" }}>${sLo.toLocaleString()}–${sHi.toLocaleString()}</div>
+        <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 700, color: P.green, whiteSpace: "nowrap" }}>${sLo.toLocaleString()}–${sHi.toLocaleString()}</div>
       </div>
     </div>
   );
@@ -627,7 +624,7 @@ function ROICalculatorSection() {
           <h2 style={{ fontFamily: FONT, fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 700, color: P.ink, margin: 0, lineHeight: 1.2, letterSpacing: "-0.01em" }}>
             What is manual work costing your business?
           </h2>
-          {!open && <p style={{ fontFamily: FONT, fontSize: 14, color: P.inkLight, marginTop: 14, marginBottom: 0, lineHeight: 1.7 }}>8 questions. Conservative estimate. No email required.</p>}
+          {!open && <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginTop: 14, marginBottom: 0, lineHeight: 1.7 }}>8 questions. Conservative estimate. No email required.</p>}
         </div>
         <div style={{ position: "absolute", top: "50%", right: mob ? 20 : 36, transform: "translateY(-50%)", width: 32, height: 32, border: `1px solid ${P.paperRule}`, background: open ? P.paper : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <span style={{ fontFamily: FONT, fontSize: 16, color: P.inkFaint, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.25s ease", display: "block", lineHeight: 1 }}>{"\u25BE"}</span>
@@ -660,7 +657,7 @@ function ROICalculatorSection() {
                     hint={(v) => RC_ADOPT_OPTS.find(o => o.label === v)?.desc || ""} />
                   <div style={{ display: "flex", gap: 14, alignItems: "center", marginTop: 8 }}>
                     <button onClick={goResults} disabled={!hrsReady}
-                      style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "14px 32px", background: hrsReady ? P.gold : P.inkFaint, color: "#fff", border: "none", cursor: hrsReady ? "pointer" : "default", opacity: hrsReady ? 1 : 0.4 }}>
+                      style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: hrsReady ? P.gold : P.inkFaint, color: "#fff", border: "none", cursor: hrsReady ? "pointer" : "default", opacity: hrsReady ? 1 : 0.4, margin: "24px auto" }}>
                       Calculate ROI
                     </button>
                   </div>
@@ -674,12 +671,12 @@ function ROICalculatorSection() {
                 <div style={{ background: P.paper, borderLeft: `3px solid ${P.gold}`, padding: mob ? "28px 20px" : "36px 32px", textAlign: "center", marginBottom: 24 }}>
                   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 10, marginBottom: 14 }}>
                     <SecLabel color={P.gold} style={{ marginBottom: 0 }}>Conservative estimate</SecLabel>
-                    <span style={{ fontFamily: FONT, fontSize: 7.5, fontWeight: 700, color: confidenceLabel === "Higher" ? P.green : confidenceLabel === "Moderate" ? P.amber : P.inkFaint, background: (confidenceLabel === "Higher" ? P.green : confidenceLabel === "Moderate" ? P.amber : P.inkFaint) + "15", padding: "3px 8px", letterSpacing: "0.14em", textTransform: "uppercase" }}>{confidenceLabel} confidence</span>
+                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: P.inkMid, background: P.paperShade, padding: "3px 8px", letterSpacing: "0.14em", textTransform: "uppercase" }}>{confidenceLabel} confidence</span>
                   </div>
                   <SecLabel color={P.inkFaint} style={{ marginBottom: 10 }}>
                     {includeToolCost && results.annToolCost > 0 ? "Estimated Net Annual Savings" : "Estimated Annual Savings"}
                   </SecLabel>
-                  <div style={{ fontFamily: FONT, fontSize: mob ? 36 : 48, fontWeight: 700, color: P.gold, lineHeight: 1, letterSpacing: "-0.02em" }}>
+                  <div style={{ fontFamily: FONT, fontSize: 32, fontWeight: 700, color: P.gold, lineHeight: 1, letterSpacing: "-0.02em" }}>
                     {includeToolCost && results.annToolCost > 0
                       ? (results.netHi <= 0 ? "No net savings" : `$${Math.max(0, results.netLo).toLocaleString()}–$${results.netHi.toLocaleString()}`)
                       : `$${results.grossLo.toLocaleString()}–$${results.grossHi.toLocaleString()}`}
@@ -708,7 +705,7 @@ function ROICalculatorSection() {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: mob ? "column" : "row", gap: 14, alignItems: mob ? "stretch" : "center", marginTop: 20 }}>
-                  <button onClick={() => setStep("questions")} style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "14px 32px", background: P.gold, color: "#fff", border: "none", cursor: "pointer", textAlign: "center" }}>Adjust inputs</button>
+                  <button onClick={() => setStep("questions")} style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: P.gold, color: "#fff", border: "none", cursor: "pointer", margin: "24px auto" }}>Adjust inputs</button>
                   <a href="/assessment" style={{ fontFamily: FONT, fontSize: 12, color: P.gold, textDecoration: "none", borderBottom: `1px solid ${P.goldFaint}`, textAlign: mob ? "center" : "left" }}>Take the AI Readiness Assessment</a>
                   <span onClick={resetAll} style={{ fontFamily: FONT, fontSize: 12, color: P.inkFaint, cursor: "pointer", borderBottom: `1px solid ${P.paperRule}`, textAlign: mob ? "center" : "left" }}>Start over</span>
                 </div>
@@ -832,7 +829,7 @@ function CTASection({ onCTA }) {
   return (
     <section style={{
       background: P.navy,
-      color: "#E6EEF8", padding: isMobile ? "64px 20px" : "96px 36px",
+      color: "#D8DEE9", padding: isMobile ? "64px 20px" : "96px 36px",
     }}>
       <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
         <SecLabel color={P.goldLight} style={{ marginBottom: 18 }}>Your next step</SecLabel>
@@ -842,24 +839,23 @@ function CTASection({ onCTA }) {
         }}>
           Know where you stand before you spend a dollar on AI
         </h2>
-        <p style={{ fontFamily: FONT, fontSize: 15, color: "#E6EEF8", lineHeight: 1.8, marginBottom: 44 }}>
+        <p style={{ fontFamily: FONT, fontSize: 15, color: "#D8DEE9", lineHeight: 1.8, marginBottom: 44 }}>
           18 questions. 5 minutes. Free results on screen. Upgrade to a detailed report if you want more.
         </p>
 
         <div style={{ textAlign: "center" }}>
           <button onClick={onCTA} style={{
-            fontFamily: FONT, fontSize: 12, fontWeight: 700,
-            letterSpacing: "0.12em", textTransform: "uppercase",
-            padding: "14px 32px", minWidth: 280,
-            background: P.gold, color: "#fff",
-            border: "none", cursor: "pointer", transition: "all 0.2s ease",
-            minHeight: isMobile ? 48 : "auto",
+            fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+            background: P.gold, color: "#fff", fontSize: 13, fontWeight: 600,
+            letterSpacing: "0.10em", textTransform: "uppercase",
+            border: "none", cursor: "pointer", margin: "24px auto",
+            transition: "all 0.2s ease",
           }}>
             Start Free Assessment
           </button>
         </div>
 
-        <p style={{ fontFamily: FONT, fontSize: 12, color: "#9BB1C7", marginTop: 16, letterSpacing: "0.04em" }}>
+        <p style={{ fontFamily: FONT, fontSize: 12, color: "#B8C2CC", marginTop: 16, letterSpacing: "0.04em" }}>
           Free. No login. Upgrade anytime.
         </p>
       </div>
@@ -880,14 +876,14 @@ function Footer() {
         gap: 10, maxWidth: 1200, margin: "0 auto", width: "100%",
       }}>
         <LogoMark variant="footer" />
-        <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: "#9BB1C7", margin: 0, letterSpacing: "0.04em" }}>
+        <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 400, color: "#B8C2CC", margin: 0, letterSpacing: "0.04em" }}>
           AI guidance for real businesses.
         </p>
         <Rule diamond color={P.navyDim} style={{ width: 120, margin: "6px 0" }} />
-        <a href="/?page=roi" style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: "#E6EEF8", margin: 0, letterSpacing: "0.04em", textDecoration: "none", borderBottom: `1px solid ${P.navyDim}` }}>
+        <a href="/?page=roi" style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: "#D8DEE9", margin: 0, letterSpacing: "0.04em", textDecoration: "none", borderBottom: `1px solid ${P.navyDim}` }}>
           ROI Calculator
         </a>
-        <p style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: "#9BB1C7", margin: 0, letterSpacing: "0.04em" }}>
+        <p style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: "#B8C2CC", margin: 0, letterSpacing: "0.04em" }}>
           &copy; {new Date().getFullYear()} Telchar AI. All rights reserved.
         </p>
       </footer>

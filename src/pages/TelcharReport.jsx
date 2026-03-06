@@ -14,19 +14,20 @@ const P = {
   paper:      "#F5F0E8",
   paperShade: "#EDE6D6",
   paperRule:  "#CEC4B2",
-  navy:       "#0E1B2D",
-  navyText:   "#8AACC8",
+  navy:       "#0F1923",
+  navyText:   "#D8DEE9",
+  navyMeta:   "#B8C2CC",
   navyDim:    "#253848",
   navyFaint:  "#162438",
-  gold:       "#B8912A",
-  goldLight:  "#CAAA4E",
-  goldFaint:  "#E4D5AA",
+  gold:       "#C9A84C",
+  goldLight:  "#D4BA6A",
+  goldFaint:  "#E7D9B1",
   ink:        "#1A1714",
   inkMid:     "#3C3530",
   inkLight:   "#6A6055",
-  inkFaint:   "#A89C8C",
+  inkFaint:   "#6A6055",
   green:      "#4E7C45",
-  amber:      "#B8912A",
+  amber:      "#C9A84C",
   red:        "#8A2A2A",
 };
 
@@ -297,12 +298,12 @@ function ReportPage({ children, pg, total }) {
         padding:"0 36px", height:56,
       }}>
         <div>
-          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, fontWeight:600, color:"#E6EEF8", lineHeight:1.2 }}>{CO}</div>
-          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:"#9BB1C7", marginTop:2, letterSpacing:"0.04em" }}>{IND}</div>
+          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, fontWeight:600, color:"#D8DEE9", lineHeight:1.2 }}>{CO}</div>
+          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:"#B8C2CC", marginTop:2, letterSpacing:"0.04em" }}>{IND}</div>
         </div>
         <div style={{ textAlign:"right" }}>
-          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:P.navyFaint, marginBottom:2 }}>Telchar AI Readiness Index{"\u2122"}</div>
-          <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#9BB1C7", letterSpacing:"0.1em" }}>Confidential · {DATE}</div>
+          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:P.navyMeta, marginBottom:2 }}>Telchar AI Readiness Index{"\u2122"}</div>
+          <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#B8C2CC", letterSpacing:"0.1em" }}>Confidential · {DATE}</div>
         </div>
       </div>
 
@@ -319,8 +320,8 @@ function ReportPage({ children, pg, total }) {
         display:"flex", alignItems:"center", justifyContent:"space-between",
         padding:"0 36px",
       }}>
-        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:500, letterSpacing:"0.2em", textTransform:"uppercase", color:"#9BB1C7" }}>Telchar AI · Confidential</span>
-        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#9BB1C7", letterSpacing:"0.1em" }}>Page {pg} of {total}</span>
+        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:500, letterSpacing:"0.2em", textTransform:"uppercase", color:"#B8C2CC" }}>Telchar AI · Confidential</span>
+        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#B8C2CC", letterSpacing:"0.1em" }}>Page {pg} of {total}</span>
       </div>
     </div>
   );
@@ -336,9 +337,9 @@ function Paywall({ tier, onUpgrade }) {
       <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:cfg.color, marginBottom:8 }}>{cfg.label}</div>
       <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:P.inkMid, lineHeight:1.7, margin:"0 0 14px" }}>{cfg.desc}</p>
       <button onClick={onUpgrade} style={{
-        fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700,
-        letterSpacing:"0.1em", textTransform:"uppercase",
-        padding:"9px 20px", background:cfg.color, color:"#fff", border:"none", cursor:"pointer",
+        fontFamily:"'IBM Plex Sans',sans-serif", width:320, height:44, display:"flex", alignItems:"center", justifyContent:"center",
+        background:cfg.color, color:"#fff", fontSize:13, fontWeight:600,
+        letterSpacing:"0.10em", textTransform:"uppercase", border:"none", cursor:"pointer", margin:"24px auto",
       }}>Unlock Report</button>
     </div>
   );
@@ -347,7 +348,7 @@ function Paywall({ tier, onUpgrade }) {
 // ═══════════════════════════════════════════════════════════
 // PAGE 1 — COVER
 // ═══════════════════════════════════════════════════════════
-function PageCover({ pg, total }) {
+function PageCover({ pg, total, onNext }) {
   return (
     <div style={{
       width:"100%",
@@ -361,12 +362,12 @@ function PageCover({ pg, total }) {
 
       {/* Content */}
       <div style={{ flex:1, padding:"52px 48px 0", display:"flex", flexDirection:"column" }}>
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:"#9BB1C7", marginBottom:12 }}>Telchar AI Readiness Index{"\u2122"}</div>
+        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:"#B8C2CC", marginBottom:12 }}>Telchar AI Readiness Index{"\u2122"}</div>
 
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:36, fontWeight:700, color:"#E4EEF8", lineHeight:1.1, letterSpacing:"-0.01em", marginBottom:8 }}>
+        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:36, fontWeight:700, color:"#D8DEE9", lineHeight:1.1, letterSpacing:"-0.01em", marginBottom:8 }}>
           {CO}
         </div>
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:16, color:"#9BB1C7", marginBottom:48 }}>{IND}</div>
+        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:16, color:"#B8C2CC", marginBottom:48 }}>{IND}</div>
 
         <Rule diamond={false} style={{ borderTop:`1px solid #162438`, height:0, marginBottom:40 }}/>
 
@@ -374,29 +375,36 @@ function PageCover({ pg, total }) {
         <div style={{ display:"flex", alignItems:"baseline", gap:16, marginBottom:12 }}>
           <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:80, fontWeight:700, color:scoreColor(SCORES.overall), lineHeight:1, letterSpacing:"-0.04em" }}>{SCORES.overall}</div>
           <div>
-            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:14, fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", color:scoreColor(SCORES.overall), marginBottom:4 }}>{scoreTier(SCORES.overall)}</div>
-            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#9BB1C7" }}>out of 100</div>
+            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:15, fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", color:scoreColor(SCORES.overall), marginBottom:4 }}>{scoreTier(SCORES.overall)}</div>
+            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#B8C2CC" }}>out of 100</div>
           </div>
         </div>
 
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#9BB1C7", lineHeight:1.7, maxWidth:520, marginBottom:48 }}>
+        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#B8C2CC", lineHeight:1.7, maxWidth:520, marginBottom:48 }}>
           This report presents findings from the Telchar AI Readiness Index{"\u2122"} across five operational dimensions. Scores reflect self-reported data collected via structured questionnaire and facilitated analysis.
         </div>
 
         <div style={{ display:"flex", gap:32 }}>
           {[["Assessment date", DATE],["Framework","v2.4 · Five Category"],["Classification","Confidential"]].map(([k,v])=>(
             <div key={k}>
-              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.2em", textTransform:"uppercase", color:"#9BB1C7", marginBottom:4 }}>{k}</div>
-              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, fontWeight:500, color:"#E6EEF8" }}>{v}</div>
+              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.2em", textTransform:"uppercase", color:"#B8C2CC", marginBottom:4 }}>{k}</div>
+              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, fontWeight:500, color:"#D8DEE9" }}>{v}</div>
             </div>
           ))}
         </div>
       </div>
 
+      {/* Begin reading prompt */}
+      {onNext && (
+        <div onClick={onNext} style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:16, color:P.gold, cursor:"pointer", textAlign:"center", marginTop:32, paddingBottom:24 }}>
+          Begin reading your assessment report →
+        </div>
+      )}
+
       {/* Footer */}
       <div style={{ borderTop:`1px solid #162438`, height:38, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 48px", flexShrink:0 }}>
-        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:500, letterSpacing:"0.2em", textTransform:"uppercase", color:"#9BB1C7" }}>Telchar AI · Confidential</span>
-        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#9BB1C7" }}>Page {pg} of {total}</span>
+        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:500, letterSpacing:"0.2em", textTransform:"uppercase", color:"#B8C2CC" }}>Telchar AI · Confidential</span>
+        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#B8C2CC" }}>Page {pg} of {total}</span>
       </div>
     </div>
   );
@@ -439,7 +447,7 @@ function PageSummary({ pg, total, tier, onUpgrade, demo }) {
         {/* Right: interpretation */}
         <div style={{ paddingTop:desktop?30:0 }}>
           <SecLabel>Score interpretation</SecLabel>
-          <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13.5:14, color:P.inkMid, lineHeight:1.9, margin:"0 0 28px" }}>{interp}</p>
+          <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13:15, color:P.inkMid, lineHeight:1.9, margin:"0 0 28px" }}>{interp}</p>
           {/* Benchmark block */}
           <div style={{ background:P.paperShade, borderLeft:`3px solid ${P.goldLight}`, padding:"14px 18px" }}>
             <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:P.inkFaint, marginBottom:12 }}>Score vs. SMB benchmark</div>
@@ -447,7 +455,7 @@ function PageSummary({ pg, total, tier, onUpgrade, demo }) {
               {[["Your score",SCORES.overall,P.navy],["SMB average",BENCHMARK,P.inkLight],["Delta",(delta>=0?"+":"")+delta,delta>=0?P.green:P.amber]].map(([label,val,col],i)=>(
                 <div key={label} style={{ paddingRight:i<2?20:0, paddingLeft:i>0?20:0, borderRight:i<2?`1px solid ${P.paperRule}`:"none" }}>
                   <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", color:P.inkFaint, marginBottom:4 }}>{label}</div>
-                  <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:22, fontWeight:700, color:col, lineHeight:1 }}>{val}</div>
+                  <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:24, fontWeight:700, color:col, lineHeight:1 }}>{val}</div>
                 </div>
               ))}
             </div>
@@ -470,10 +478,10 @@ function PageSummary({ pg, total, tier, onUpgrade, demo }) {
           <div key={cat.key} style={{ display:"grid", gridTemplateColumns:mobile?"44px 1fr 82px":"60px 1fr 110px", gap:mobile?12:22, padding:mobile?"14px 0 10px":"18px 0 12px", borderBottom:`1px solid ${P.paperRule}`, alignItems:"start" }}>
             <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?26:32, fontWeight:700, color:col, textAlign:"center", lineHeight:1, paddingTop:2 }}>{cat.score}</div>
             <div>
-              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?12:13.5, fontWeight:500, color:P.ink, marginBottom:10 }}>{cat.label}</div>
+              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?12:13, fontWeight:500, color:P.ink, marginBottom:10 }}>{cat.label}</div>
               <SegScale score={cat.score}/>
             </div>
-            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?8:9, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", color:col, textAlign:"right", paddingTop:4 }}>{scoreTier(cat.score)}</div>
+            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", color:col, textAlign:"right", paddingTop:4 }}>{scoreTier(cat.score)}</div>
           </div>
         );
       })}
@@ -495,7 +503,7 @@ function PageQuickWins({ pg, total, tier, onUpgrade, demo }) {
   return (
     <ReportPage pg={pg} total={total}>
       <SecLabel>Priority improvement areas</SecLabel>
-      <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13:14, color:P.inkMid, lineHeight:1.8, marginBottom:28 }}>
+      <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13:15, color:P.inkMid, lineHeight:1.8, marginBottom:28 }}>
         Three actions. Each executable within two weeks using Make and Claude. No new platforms required. Total cost under $30 per month.
       </div>
 
@@ -588,14 +596,14 @@ function PageCategory({ catKey, pg, total }) {
 
       {/* Analysis */}
       <SecLabel>Analysis</SecLabel>
-      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13:14, color:P.inkMid, lineHeight:1.9, marginBottom:28 }}>{guidance[catKey]}</p>
+      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13:15, color:P.inkMid, lineHeight:1.9, marginBottom:28 }}>{guidance[catKey]}</p>
 
       {/* Benchmark comparison */}
       <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:0, marginBottom:28, paddingBottom:28, borderBottom:`1px solid ${P.paperRule}` }}>
         {[["Your score",cat.score,scoreColor(cat.score)],["SMB average",BENCHMARK,P.inkLight],["Delta",(cat.score-BENCHMARK>=0?"+":"")+(cat.score-BENCHMARK),cat.score>=BENCHMARK?P.green:P.amber]].map(([label,val,col],i)=>(
           <div key={label} style={{ paddingRight:i<2?20:0, paddingLeft:i>0?20:0, borderRight:i<2?`1px solid ${P.paperRule}`:"none" }}>
             <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", color:P.inkFaint, marginBottom:4 }}>{label}</div>
-            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:22, fontWeight:700, color:col }}>{val}</div>
+            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:24, fontWeight:700, color:col }}>{val}</div>
           </div>
         ))}
       </div>
@@ -639,7 +647,7 @@ function PageRoadmap({ pg, total }) {
   return (
     <ReportPage pg={pg} total={total}>
       <SecLabel>90-Day implementation roadmap</SecLabel>
-      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13:14, color:P.inkMid, lineHeight:1.8, marginBottom:32 }}>
+      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13:15, color:P.inkMid, lineHeight:1.8, marginBottom:32 }}>
         Structured as three progressive phases. Each phase builds on the prior without disrupting operational continuity. Implementation is scoped, milestone-driven, and delivered by Telchar AI in collaboration with your team.
       </p>
 
@@ -680,7 +688,7 @@ function PageRisk({ pg, total }) {
   return (
     <ReportPage pg={pg} total={total}>
       <SecLabel>Risk analysis</SecLabel>
-      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:14, color:P.inkMid, lineHeight:1.8, marginBottom:28 }}>
+      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:15, color:P.inkMid, lineHeight:1.8, marginBottom:28 }}>
         Four implementation risks identified based on assessment findings. All are manageable within a structured engagement. None represent blockers.
       </p>
       {risks.map((r,i)=>(
@@ -712,7 +720,7 @@ function PageDataInfra({ pg, total }) {
   return (
     <ReportPage pg={pg} total={total}>
       <SecLabel>Data infrastructure plan</SecLabel>
-      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:14, color:P.inkMid, lineHeight:1.8, marginBottom:28 }}>
+      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:15, color:P.inkMid, lineHeight:1.8, marginBottom:28 }}>
         A four-layer data architecture built on tools already in use. No new software subscriptions beyond Make and Claude Pro. Total infrastructure cost under $30 per month.
       </p>
       {layers.map((l,i)=>(
@@ -735,7 +743,7 @@ function PageEngagement({ pg, total }) {
   return (
     <ReportPage pg={pg} total={total}>
       <SecLabel>Engagement pathway</SecLabel>
-      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:14, color:P.inkMid, lineHeight:1.8, marginBottom:32 }}>
+      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:15, color:P.inkMid, lineHeight:1.8, marginBottom:32 }}>
         Telchar AI operates a three-phase engagement model. Every client starts with Discovery. Implementation is scoped from Discovery findings. Retainer ensures ongoing performance.
       </p>
 
@@ -771,10 +779,10 @@ function PageEngagement({ pg, total }) {
 
       {/* CTA */}
       <div style={{ background:P.navy, padding:"24px 28px", marginTop:8 }}>
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:"#9BB1C7", marginBottom:8 }}>Next step</div>
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:18, fontWeight:700, color:"#E4EEF8", marginBottom:10 }}>Schedule a free 30-minute consultation</div>
-        <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#9BB1C7", lineHeight:1.75, margin:"0 0 18px" }}>Review your findings, ask questions, and understand whether a Discovery engagement is the right next step. No obligation.</p>
-        <button onClick={()=>alert("Production: opens calendar booking link.")} style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", padding:"14px 32px", background:P.gold, color:"#fff", border:"none", cursor:"pointer" }}>Book a Call</button>
+        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:"#B8C2CC", marginBottom:8 }}>Next step</div>
+        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:20, fontWeight:700, color:"#D8DEE9", marginBottom:10 }}>Schedule a free 30-minute consultation</div>
+        <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#B8C2CC", lineHeight:1.75, margin:"0 0 18px" }}>Review your findings, ask questions, and understand whether a Discovery engagement is the right next step. No obligation.</p>
+        <button onClick={()=>alert("Production: opens calendar booking link.")} style={{ fontFamily:"'IBM Plex Sans',sans-serif", width:320, height:44, display:"flex", alignItems:"center", justifyContent:"center", background:P.gold, color:"#fff", fontSize:13, fontWeight:600, letterSpacing:"0.10em", textTransform:"uppercase", border:"none", cursor:"pointer", margin:"24px auto 0" }}>Book a Call</button>
       </div>
     </ReportPage>
   );
@@ -802,7 +810,7 @@ export default function App({ initialTier = "free", demo = false }) {
     const effectiveTier = demo ? "full" : t;
     const total = effectiveTier==="full" ? 12 : effectiveTier==="starter" ? 8 : 3;
     const pages = [
-      { label:"Cover",              node:<PageCover pg={1} total={total}/> },
+      { label:"Cover",              node:<PageCover pg={1} total={total} onNext={()=>{ setCur(1); window.scrollTo(0,0); }}/> },
       { label:"Score Summary",      node:<PageSummary pg={2} total={total} tier={effectiveTier} onUpgrade={()=>upgrade("starter")} demo={demo}/> },
       { label:"Quick Wins",         node:<PageQuickWins pg={3} total={total} tier={effectiveTier} onUpgrade={nt=>upgrade(nt)} demo={demo}/> },
     ];
@@ -848,7 +856,7 @@ export default function App({ initialTier = "free", demo = false }) {
         {/* Prev — minimal text button */}
         <button onClick={prev} disabled={cur===0} style={{
           background:"none", border:"none", padding:"4px 2px",
-          color:cur===0?P.navyFaint:P.goldLight,
+          color:cur===0?P.navyDim:P.navyText,
           cursor:cur===0?"default":"pointer",
           fontSize:18, lineHeight:1,
           opacity:cur===0?0.25:1,
@@ -861,7 +869,7 @@ export default function App({ initialTier = "free", demo = false }) {
         <div style={{ width:1, height:12, background:P.navyFaint, flexShrink:0 }}/>
 
         {/* Page label — truncates gracefully */}
-        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#E6EEF8", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1, minWidth:0 }}>{page.label}</span>
+        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#D8DEE9", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1, minWidth:0 }}>{page.label}</span>
 
         {/* Tier tabs */}
         <div style={{ display:"flex", gap:3, flexShrink:0 }}>
@@ -871,7 +879,7 @@ export default function App({ initialTier = "free", demo = false }) {
               letterSpacing:"0.12em", textTransform:"uppercase",
               padding:"3px 7px",
               background:tier===t?P.gold+"22":"transparent",
-              color:tier===t?P.goldLight:"#9BB1C7",
+              color:tier===t?P.goldLight:"#B8C2CC",
               border:`1px solid ${tier===t?P.gold+"55":P.navyFaint}`,
               cursor:"pointer",
             }}>{label}</button>
@@ -879,12 +887,12 @@ export default function App({ initialTier = "free", demo = false }) {
         </div>
 
         {/* Page counter */}
-        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#9BB1C7", flexShrink:0, marginLeft:4 }}>{cur+1}/{pages.length}</span>
+        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:13, color:"#B8C2CC", flexShrink:0, marginLeft:4 }}>{cur+1}/{pages.length}</span>
 
         {/* Next — minimal text button */}
         <button onClick={next} disabled={cur===pages.length-1} style={{
           background:"none", border:"none", padding:"4px 2px",
-          color:cur===pages.length-1?P.navyFaint:P.goldLight,
+          color:cur===pages.length-1?P.navyDim:P.navyText,
           cursor:cur===pages.length-1?"default":"pointer",
           fontSize:18, lineHeight:1,
           opacity:cur===pages.length-1?0.25:1,
@@ -898,9 +906,9 @@ export default function App({ initialTier = "free", demo = false }) {
           {page.node}
           {/* Bottom navigation */}
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"24px 36px", borderTop:"1px solid rgba(255,255,255,0.08)", background:P.navy }}>
-            <span onClick={cur>0?prev:undefined} style={{ fontFamily:"'IBM Plex Sans', sans-serif", fontSize:13, color:"#9BB1C7", cursor:cur>0?"pointer":"default", visibility:cur===0?"hidden":"visible" }}>{"\u2190"} Previous section</span>
-            <span style={{ fontFamily:"'IBM Plex Sans', sans-serif", fontSize:13, color:"#9BB1C7" }}>Page {cur+1} of {pages.length}</span>
-            <span onClick={cur<pages.length-1?next:undefined} style={{ fontFamily:"'IBM Plex Sans', sans-serif", fontSize:13, color:"#9BB1C7", cursor:cur<pages.length-1?"pointer":"default", visibility:cur===pages.length-1?"hidden":"visible" }}>Next section {"\u2192"}</span>
+            <span onClick={cur>0?prev:undefined} style={{ fontFamily:"'IBM Plex Sans', sans-serif", fontSize:13, color:"#B8C2CC", cursor:cur>0?"pointer":"default", visibility:cur===0?"hidden":"visible" }}>{"\u2190"} Previous section</span>
+            <span style={{ fontFamily:"'IBM Plex Sans', sans-serif", fontSize:13, color:"#B8C2CC" }}>Page {cur+1} of {pages.length}</span>
+            <span onClick={cur<pages.length-1?next:undefined} style={{ fontFamily:"'IBM Plex Sans', sans-serif", fontSize:13, color:"#B8C2CC", cursor:cur<pages.length-1?"pointer":"default", visibility:cur===pages.length-1?"hidden":"visible" }}>Next section {"\u2192"}</span>
           </div>
         </div>
       </div>

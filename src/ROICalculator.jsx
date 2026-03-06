@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { TELCHAR as P, FONT, MONO, GOOGLE_FONTS_URL, Diamond, Rule, SecLabel } from "./design/telcharDesign";
+import { TELCHAR as P, FONT, MONO, GOOGLE_FONTS_URL, Diamond, Rule, SecLabel, TEXT, NAVY_TEXT, TYPE, CTA, OPTION_CARD } from "./design/telcharDesign";
 
 // Anvil logo mark
 const ANVIL_URL = "data:image/png;base64,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";
@@ -71,7 +71,8 @@ function Chip({ label, selected, onClick, small }) {
         fontFamily: FONT, fontSize: small ? 12 : 13, fontWeight: selected ? 600 : 400,
         padding: "10px 8px",
         background: selected ? P.goldFaint : "transparent",
-        border: `1px solid ${selected ? P.gold : P.paperRule}`,
+        border: selected ? `2px solid ${P.gold}` : "1px solid #D6CCB8",
+        borderLeft: selected ? `3px solid ${P.gold}` : "1px solid #D6CCB8",
         color: selected ? P.ink : P.inkMid,
         cursor: "pointer", transition: "all 0.12s ease",
         display: "flex", alignItems: "center", justifyContent: "center",
@@ -107,7 +108,7 @@ function CatRow({ label, hLo, hHi, sLo, sHi, rateLo, rateHi, mob }) {
           <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: P.ink }}>{label}</div>
           <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginTop: 3 }}>{hLo}–{hHi} hrs/wk at {pct(rateLo)}–{pct(rateHi)}%</div>
         </div>
-        <div style={{ fontFamily: FONT, fontSize: 14, fontWeight: 700, color: P.green, whiteSpace: "nowrap" }}>
+        <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 700, color: P.green, whiteSpace: "nowrap" }}>
           ${sLo.toLocaleString()}–${sHi.toLocaleString()}
         </div>
       </div>
@@ -122,7 +123,7 @@ function Acc({ title, defaultOpen = false, children }) {
     <div style={{ borderBottom: `1px solid ${P.paperRule}` }}>
       <div onClick={() => setOpen(!open)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", padding: "14px 0" }}>
         <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: P.inkMid }}>{title}</span>
-        <span style={{ fontFamily: FONT, fontSize: 14, color: P.inkLight, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.15s ease" }}>{"\u25BE"}</span>
+        <span style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.15s ease" }}>{"\u25BE"}</span>
       </div>
       {open && <div style={{ paddingBottom: 16 }}>{children}</div>}
     </div>
@@ -307,8 +308,8 @@ export default function ROICalculator() {
           fontFamily: FONT, fontSize: 12, fontWeight: 700,
           letterSpacing: "0.12em", textTransform: "uppercase",
           padding: "3px 7px",
-          background: P.gold + "22", color: P.goldLight,
-          border: `1px solid ${P.gold}55`,
+          background: P.navyDim, color: P.navyText,
+          border: `1px solid ${P.navyFaint}`,
         }}>Beta</span>
       </div>
 
@@ -323,18 +324,14 @@ export default function ROICalculator() {
               <h1 style={{ fontFamily: FONT, fontSize: mob ? 24 : 32, fontWeight: 700, color: P.ink, marginBottom: 12, lineHeight: 1.1, letterSpacing: "-0.01em" }}>
                 What is manual work costing your business?
               </h1>
-              <p style={{ fontFamily: FONT, fontSize: 14, color: P.inkMid, marginBottom: 32, lineHeight: 1.75, maxWidth: 520 }}>
+              <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkMid, marginBottom: 32, lineHeight: 1.75, maxWidth: 520 }}>
                 Answer a few questions about how your team spends time. Get a conservative, transparent estimate of what AI-assisted automation could recover annually.
               </p>
 
               <button onClick={() => setStep("questions")}
                 style={{
-                  fontFamily: FONT, fontSize: 12, fontWeight: 700,
-                  letterSpacing: "0.12em", textTransform: "uppercase",
-                  padding: "14px 32px",
-                  background: P.gold, color: "#fff", border: "none",
-                  cursor: "pointer",
-                  width: mob ? "100%" : "auto",
+                  ...CTA.style,
+                  width: mob ? "100%" : CTA.width,
                 }}>
                 Start Calculator
               </button>
@@ -345,7 +342,7 @@ export default function ROICalculator() {
                 {[{ n: "8", t: "Questions" }, { n: "4", t: "Categories" }, { n: "~2 min", t: "To complete" }].map((s, i) => (
                   <div key={s.t} style={{ paddingRight: i < 2 ? 24 : 0, paddingLeft: i > 0 ? 24 : 0, borderRight: i < 2 ? `1px solid ${P.paperRule}` : "none" }}>
                     <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: P.inkFaint, marginBottom: 4 }}>{s.t}</div>
-                    <div style={{ fontFamily: FONT, fontSize: 18, fontWeight: 700, color: P.ink }}>{s.n}</div>
+                    <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 700, color: P.ink }}>{s.n}</div>
                   </div>
                 ))}
               </div>
@@ -393,11 +390,8 @@ export default function ROICalculator() {
                   <div style={{ display: "flex", gap: 14, alignItems: "center", marginTop: 8 }}>
                     <button onClick={goResults} disabled={!hrsReady}
                       style={{
-                        fontFamily: FONT, fontSize: 12, fontWeight: 700,
-                        letterSpacing: "0.12em", textTransform: "uppercase",
-                        padding: "14px 32px",
+                        ...CTA.style,
                         background: hrsReady ? P.gold : P.inkFaint,
-                        color: "#fff", border: "none",
                         cursor: hrsReady ? "pointer" : "default",
                         opacity: hrsReady ? 1 : 0.4,
                       }}>
@@ -412,11 +406,10 @@ export default function ROICalculator() {
                 <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "10px 16px", background: P.navy, borderTop: `1px solid ${P.navyFaint}`, zIndex: 100 }}>
                   <button onClick={goResults} disabled={!hrsReady}
                     style={{
-                      fontFamily: FONT, fontSize: 12, fontWeight: 700,
-                      letterSpacing: "0.12em", textTransform: "uppercase",
-                      width: "100%", padding: "14px 0",
+                      ...CTA.style,
+                      width: "100%",
+                      margin: 0,
                       background: hrsReady ? P.gold : P.inkFaint,
-                      color: "#fff", border: "none",
                       cursor: hrsReady ? "pointer" : "default",
                       opacity: hrsReady ? 1 : 0.4,
                     }}>
@@ -444,7 +437,8 @@ export default function ROICalculator() {
                           fontFamily: FONT, fontSize: 12, fontWeight: isActive ? 600 : 400,
                           padding: "8px 16px", cursor: "pointer",
                           background: isActive ? P.goldFaint : "transparent",
-                          border: `1px solid ${isActive ? P.gold : P.paperRule}`,
+                          border: isActive ? `2px solid ${P.gold}` : "1px solid #D6CCB8",
+                          borderLeft: isActive ? `3px solid ${P.gold}` : "1px solid #D6CCB8",
                           color: P.ink,
                           textTransform: "capitalize",
                           outline: "none", WebkitTapHighlightColor: "transparent",
@@ -460,7 +454,7 @@ export default function ROICalculator() {
               <div style={{ marginBottom: 28 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
                   <SecLabel style={{ marginBottom: 0 }}>{estimationMode.charAt(0).toUpperCase() + estimationMode.slice(1)} estimate</SecLabel>
-                  <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: confColor, borderLeft: `3px solid ${confColor}`, paddingLeft: 8 }}>
+                  <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: P.inkMid, background: P.paperShade, borderLeft: `3px solid ${confColor}`, paddingLeft: 8, padding: "3px 10px 3px 8px" }}>
                     {confidenceLabel} confidence
                   </div>
                 </div>
@@ -471,13 +465,13 @@ export default function ROICalculator() {
                 <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: P.inkFaint, marginBottom: 6 }}>
                   {includeToolCost && results.annToolCost > 0 ? "Estimated Net Annual Savings" : "Estimated Annual Savings"}
                 </div>
-                <div style={{ fontFamily: FONT, fontSize: mob ? 36 : 48, fontWeight: 700, color: P.gold, lineHeight: 1, letterSpacing: "-0.04em" }}>
+                <div style={{ fontFamily: FONT, fontSize: mob ? 32 : 48, fontWeight: 700, color: P.gold, lineHeight: 1, letterSpacing: "-0.04em" }}>
                   {includeToolCost && results.annToolCost > 0
                     ? (results.netHi <= 0 ? "No net savings" : `$${Math.max(0, results.netLo).toLocaleString()}–$${results.netHi.toLocaleString()}`)
                     : `$${results.grossLo.toLocaleString()}–$${results.grossHi.toLocaleString()}`
                   }
                 </div>
-                <div style={{ fontFamily: FONT, fontSize: 14, color: P.inkMid, marginTop: 10 }}>
+                <div style={{ fontFamily: FONT, fontSize: 15, color: P.inkMid, marginTop: 10 }}>
                   {results.wkLo}–{results.wkHi} hours recovered per week
                 </div>
 
@@ -490,7 +484,7 @@ export default function ROICalculator() {
                   ].map(([label, val], i, arr) => (
                     <div key={label} style={{ paddingRight: i < arr.length - 1 ? 20 : 0, paddingLeft: i > 0 ? 20 : 0, borderRight: i < arr.length - 1 ? `1px solid ${P.paperRule}` : "none" }}>
                       <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: P.inkFaint, marginBottom: 4 }}>{label}</div>
-                      <div style={{ fontFamily: FONT, fontSize: 14, fontWeight: 700, color: P.ink }}>{val}</div>
+                      <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 700, color: P.ink }}>{val}</div>
                     </div>
                   ))}
                 </div>
@@ -527,7 +521,7 @@ export default function ROICalculator() {
               <div style={{ background: P.paperShade, borderLeft: `3px solid ${P.paperRule}`, marginBottom: 16, overflow: "hidden" }}>
                 <div onClick={() => setShowAdjust(!showAdjust)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", padding: mob ? "14px 18px" : "14px 22px" }}>
                   <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: P.inkMid }}>Adjust assumptions</span>
-                  <span style={{ fontFamily: FONT, fontSize: 14, color: P.inkLight, transform: showAdjust ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.15s ease" }}>{"\u25BE"}</span>
+                  <span style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, transform: showAdjust ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.15s ease" }}>{"\u25BE"}</span>
                 </div>
                 {showAdjust && (
                   <div style={{ padding: `0 ${mob ? "18px" : "22px"} 18px` }}>
@@ -645,11 +639,8 @@ export default function ROICalculator() {
               <div style={{ display: "flex", flexDirection: mob ? "column" : "row", gap: 14, alignItems: mob ? "stretch" : "center", marginBottom: 20 }}>
                 <button onClick={() => { setStep("questions"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                   style={{
-                    fontFamily: FONT, fontSize: 12, fontWeight: 700,
-                    letterSpacing: "0.12em", textTransform: "uppercase",
-                    padding: "14px 32px",
-                    background: P.gold, color: "#fff", border: "none",
-                    cursor: "pointer", textAlign: "center",
+                    ...CTA.style,
+                    width: mob ? "100%" : CTA.width,
                   }}>
                   Adjust inputs
                 </button>
