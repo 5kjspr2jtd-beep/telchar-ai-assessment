@@ -185,13 +185,13 @@ function RateSlider({ label, value, min, max, onChange }) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-export default function ROICalculator() {
-  const [step, setStep] = useState("intro");
+export default function ROICalculator({ embedded = false }) {
+  const [step, setStep] = useState(embedded ? "questions" : "intro");
   const [cost, setCost] = useState(null);
   const [hrs, setHrs] = useState({});
-  const [team, setTeam] = useState("1–3");
-  const [toolSpend, setToolSpend] = useState("$0");
-  const [adopt, setAdopt] = useState("Medium");
+  const [team, setTeam] = useState(null);
+  const [toolSpend, setToolSpend] = useState(null);
+  const [adopt, setAdopt] = useState(null);
   const [includeToolCost, setIncludeToolCost] = useState(true);
   const [showAdjust, setShowAdjust] = useState(false);
   const [rateOverrides, setRateOverrides] = useState({});
@@ -203,11 +203,13 @@ export default function ROICalculator() {
 
   const catKeys = Object.keys(DEFAULTS);
   const hrsReady = cost && catKeys.every(k => hrs[k]);
-  const inputCount = (cost ? 1 : 0) + catKeys.filter(k => hrs[k]).length + (team !== "1–3" ? 1 : 0) + (adopt !== "Medium" ? 1 : 0) + (toolSpend !== "$0" ? 1 : 0);
+  const inputCount = (cost ? 1 : 0) + catKeys.filter(k => hrs[k]).length + (team ? 1 : 0) + (adopt ? 1 : 0) + (toolSpend ? 1 : 0);
   const maxInputs = 8;
 
   const confidenceScore = Math.min(100, Math.round((inputCount / maxInputs) * 70 + (ADOPT_OPTS.find(o => o.label === adopt)?.factor || 0.72) * 30));
-  const confidenceLabel = confidenceScore >= 75 ? "Higher" : confidenceScore >= 55 ? "Moderate" : "Lower";
+  // Confidence label tracks estimation mode — conservative is most reliable
+  const modeConfidence = estimationMode === "conservative" ? "Higher" : estimationMode === "balanced" ? "Moderate" : "Lower";
+  const confidenceLabel = modeConfidence;
   const modeMult = estimationMode === "conservative" ? 1.0 : estimationMode === "balanced" ? 1.35 : 1.7;
 
   const getRate = useCallback((key) => {
@@ -272,53 +274,19 @@ export default function ROICalculator() {
 
   const goResults = () => {
     setStep("results");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (!embedded) window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const resetDefaults = () => { setAdopt("Medium"); setTeam("1–3"); setToolSpend("$0"); setIncludeToolCost(true); setRateOverrides({}); setShowRateSliders(false); };
-  const resetAll = () => { setCost(null); setHrs({}); resetDefaults(); setShowAdjust(false); setEstimationMode("conservative"); setStep("intro"); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const resetAll = () => { setCost(null); setHrs({}); resetDefaults(); setShowAdjust(false); setEstimationMode("conservative"); setStep(embedded ? "questions" : "intro"); if (!embedded) window.scrollTo({ top: 0, behavior: "smooth" }); };
 
   const confColor = confidenceLabel === "Higher" ? P.green : confidenceLabel === "Moderate" ? P.amber : P.inkLight;
 
   // ── Render ──────────────────────────────────────────────────────────────────
-  return (
-    <div style={{ minHeight: "100vh", background: P.paper, fontFamily: FONT, overflowX: "hidden", width: "100%" }}>
-      <style>{`
-        @import url('${GOOGLE_FONTS_URL}');
-        *{box-sizing:border-box;margin:0;padding:0;}
-        html,body,#root{overflow-x:hidden;max-width:100vw;background:${P.paper};}
-        button{font-family:inherit;}
-        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;background:${P.gold};cursor:pointer;}
-        input[type=range]::-moz-range-thumb{width:14px;height:14px;background:${P.gold};border:none;cursor:pointer;}
-      `}</style>
+  const contentArea = (
+    <div style={{ width: "100%", maxWidth: 680, padding: embedded ? 0 : (mob ? "24px 20px 100px" : "44px 36px 48px"), margin: "0 auto" }}>
 
-      {/* ── Navy header (matches ReportPage pattern) ── */}
-      <div style={{
-        position: "sticky", top: 0, zIndex: 200,
-        background: P.navy, height: 56,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 36px",
-        borderBottom: `1px solid ${P.navyFaint}`,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <img src={ANVIL_URL} alt="Telchar AI" style={{ height: 14, filter: "brightness(0) invert(1)" }} />
-          <div style={{ width: 1, height: 14, background: P.navyFaint }} />
-          <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: P.navyText }}>ROI Calculator</span>
-        </div>
-        <span style={{
-          fontFamily: FONT, fontSize: 12, fontWeight: 700,
-          letterSpacing: "0.12em", textTransform: "uppercase",
-          padding: "3px 7px",
-          background: P.navyDim, color: P.navyText,
-          border: `1px solid ${P.navyFaint}`,
-        }}>Beta</span>
-      </div>
-
-      {/* ── Content area ── */}
-      <div style={{ display: "flex", justifyContent: "center", overflowX: "hidden" }}>
-        <div style={{ width: "100%", maxWidth: 680, padding: mob ? "24px 20px 100px" : "44px 36px 48px" }}>
-
-          {/* ═══ INTRO ═══ */}
-          {step === "intro" && (
+      {/* ═══ INTRO ═══ */}
+      {!embedded && step === "intro" && (
             <div style={{ paddingTop: mob ? 16 : 32 }}>
               <SecLabel>ROI Calculator</SecLabel>
               <h1 style={{ fontFamily: FONT, fontSize: mob ? 24 : 32, fontWeight: 700, color: P.ink, marginBottom: 12, lineHeight: 1.1, letterSpacing: "-0.01em" }}>
@@ -338,16 +306,7 @@ export default function ROICalculator() {
 
               <Rule diamond style={{ marginTop: 36, marginBottom: 28 }} />
 
-              <div style={{ display: "flex", gap: 0 }}>
-                {[{ n: "8", t: "Questions" }, { n: "4", t: "Categories" }, { n: "~2 min", t: "To complete" }].map((s, i) => (
-                  <div key={s.t} style={{ paddingRight: i < 2 ? 24 : 0, paddingLeft: i > 0 ? 24 : 0, borderRight: i < 2 ? `1px solid ${P.paperRule}` : "none" }}>
-                    <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: P.inkFaint, marginBottom: 4 }}>{s.t}</div>
-                    <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 700, color: P.ink }}>{s.n}</div>
-                  </div>
-                ))}
-              </div>
-
-              <p style={{ fontFamily: FONT, fontSize: 13, color: P.inkFaint, marginTop: 28, lineHeight: 1.5 }}>No email required. No data stored. Results update live.</p>
+              <p style={{ fontFamily: FONT, fontSize: 13, color: P.inkFaint, marginTop: 0, lineHeight: 1.5 }}>No email required. No data stored. Results update live.</p>
             </div>
           )}
 
@@ -397,13 +356,13 @@ export default function ROICalculator() {
                       }}>
                       Calculate ROI
                     </button>
-                    <span onClick={() => setStep("intro")} style={{ fontFamily: FONT, fontSize: 12, color: P.inkLight, cursor: "pointer" }}>Back</span>
+                    {!embedded && <span onClick={() => setStep("intro")} style={{ fontFamily: FONT, fontSize: 12, color: P.inkLight, cursor: "pointer" }}>Back</span>}
                   </div>
                 )}
               </div>
 
               {mob && (
-                <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "10px 16px", background: P.navy, borderTop: `1px solid ${P.navyFaint}`, zIndex: 100 }}>
+                <div style={{ position: embedded ? "sticky" : "fixed", bottom: 0, left: 0, right: 0, padding: "10px 16px", background: P.navy, borderTop: `1px solid ${P.navyFaint}`, zIndex: 100 }}>
                   <button onClick={goResults} disabled={!hrsReady}
                     style={{
                       ...CTA.style,
@@ -636,8 +595,8 @@ export default function ROICalculator() {
               </div>
 
               {/* Actions */}
-              <div style={{ display: "flex", flexDirection: mob ? "column" : "row", gap: 14, alignItems: mob ? "stretch" : "center", marginBottom: 20 }}>
-                <button onClick={() => { setStep("questions"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, marginBottom: 20 }}>
+                <button onClick={() => { setStep("questions"); if (!embedded) window.scrollTo({ top: 0, behavior: "smooth" }); }}
                   style={{
                     ...CTA.style,
                     width: mob ? "100%" : CTA.width,
@@ -645,11 +604,11 @@ export default function ROICalculator() {
                   Adjust inputs
                 </button>
                 <a href="/assessment"
-                  style={{ fontFamily: FONT, fontSize: 12, color: P.gold, cursor: "pointer", borderBottom: `1px solid ${P.goldFaint}`, textDecoration: "none", paddingBottom: 1, textAlign: mob ? "center" : "left" }}>
+                  style={{ fontFamily: FONT, fontSize: 12, color: P.gold, cursor: "pointer", borderBottom: `1px solid ${P.goldFaint}`, textDecoration: "none", paddingBottom: 1, textAlign: "center" }}>
                   Take the AI Readiness Assessment
                 </a>
                 <span onClick={resetAll}
-                  style={{ fontFamily: FONT, fontSize: 12, color: P.inkLight, cursor: "pointer", borderBottom: `1px solid ${P.paperRule}`, paddingBottom: 1, textAlign: mob ? "center" : "left" }}>
+                  style={{ fontFamily: FONT, fontSize: 12, color: P.inkLight, cursor: "pointer", borderBottom: `1px solid ${P.paperRule}`, paddingBottom: 1, textAlign: "center" }}>
                   Start over
                 </span>
               </div>
@@ -661,6 +620,46 @@ export default function ROICalculator() {
             </div>
           )}
         </div>
+  );
+
+  if (embedded) return contentArea;
+
+  return (
+    <div style={{ minHeight: "100vh", background: P.paper, fontFamily: FONT, overflowX: "hidden", width: "100%" }}>
+      <style>{`
+        @import url('${GOOGLE_FONTS_URL}');
+        *{box-sizing:border-box;margin:0;padding:0;}
+        html,body,#root{overflow-x:hidden;max-width:100vw;background:${P.paper};}
+        button{font-family:inherit;}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;background:${P.gold};cursor:pointer;}
+        input[type=range]::-moz-range-thumb{width:14px;height:14px;background:${P.gold};border:none;cursor:pointer;}
+      `}</style>
+
+      {/* ── Navy header (matches ReportPage pattern) ── */}
+      <div style={{
+        position: "sticky", top: 0, zIndex: 200,
+        background: P.navy, height: 56,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0 36px",
+        borderBottom: `1px solid ${P.navyFaint}`,
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <img src={ANVIL_URL} alt="Telchar AI" style={{ height: 14, filter: "brightness(0) invert(1)" }} />
+          <div style={{ width: 1, height: 14, background: P.navyFaint }} />
+          <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: P.navyText }}>ROI Calculator</span>
+        </div>
+        <span style={{
+          fontFamily: FONT, fontSize: 12, fontWeight: 700,
+          letterSpacing: "0.12em", textTransform: "uppercase",
+          padding: "3px 7px",
+          background: P.navyDim, color: P.navyText,
+          border: `1px solid ${P.navyFaint}`,
+        }}>Beta</span>
+      </div>
+
+      {/* ── Content area ── */}
+      <div style={{ display: "flex", justifyContent: "center", overflowX: "hidden" }}>
+        {contentArea}
       </div>
     </div>
   );

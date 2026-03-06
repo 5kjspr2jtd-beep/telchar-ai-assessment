@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { TELCHAR as P, FONT, MONO, scoreColor, scoreTier, GOOGLE_FONTS_URL, TEXT, NAVY_TEXT, TYPE, CTA, OPTION_CARD } from "../design/telcharDesign";
 
@@ -987,7 +987,7 @@ function LandingPage({ onStart }) {
           </div>
 
           <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "#9BB1C7", marginBottom: 32, fontFamily: FONT }}>
-            Takes about 4 minutes &middot; Free &middot; Confidential
+            Adaptive questions &middot; About 5 minutes &middot; Free &middot; Confidential
           </div>
 
           <button onClick={onStart} style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: P.gold, color: "#fff", border: "none", cursor: "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
@@ -998,7 +998,7 @@ function LandingPage({ onStart }) {
           </button>
 
           <div style={{ marginTop: 40, display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
-            {[{ num: String(QUESTIONS.length), text: "Questions" }, { num: "5", text: "AI Categories Scored" }, { num: "100%", text: "Confidential" }].map((item, i) => (
+            {[{ num: "5", text: "AI Categories Scored" }, { num: "100%", text: "Confidential" }].map((item, i) => (
               <div key={i} style={{ textAlign: "center", display: "flex", alignItems: "center", gap: 8 }}>
                 <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 10,5 5,10 0,5" fill={P.navy} stroke={P.goldLight} strokeWidth="1.5" /></svg>
                 <div>
@@ -1319,18 +1319,20 @@ function QuickWinsChart({ quickWins, companyName }) {
     <div style={{ marginBottom: 48 }}>
       <h2 style={{ fontFamily: FONT, fontSize: 24, fontWeight: 700, color: P.ink, lineHeight: 1.3, marginBottom: 8 }}>{companyName ? `Where ${companyName} Should Start` : "Where to Start"}</h2>
       <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginBottom: 24, lineHeight: 1.5 }}>Ranked by impact. Click any row for details.</p>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: "0 14px", alignItems: "center" }}>
         {items.map((win, i) => (
-          <div key={i} onClick={() => setSelected(selected === i ? null : i)} style={{ cursor: "pointer", padding: "16px 0", borderBottom: `1px solid ${P.paperRule}`, transition: "all 0.15s ease", display: "grid", gridTemplateColumns: "1fr auto auto", alignItems: "center", gap: 14 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+          <Fragment key={i}>
+            <div onClick={() => setSelected(selected === i ? null : i)} style={{ cursor: "pointer", padding: "16px 0", borderBottom: `1px solid ${P.paperRule}`, display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
                 <svg width="10" height="10" viewBox="0 0 10 10" style={{ flexShrink: 0 }}>
                   <polygon points="5,0 10,5 5,10 0,5" fill={P.gold} stroke={P.gold} strokeWidth="1.5" />
                 </svg>
                 <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 600, color: P.ink, minWidth: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{win.title}</div>
-              </div>
+            </div>
+            <div onClick={() => setSelected(selected === i ? null : i)} style={{ cursor: "pointer", padding: "16px 0", borderBottom: `1px solid ${P.paperRule}`, display: "flex", alignItems: "center" }}>
               <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#fff", background: P.inkMid, padding: "3px 8px", whiteSpace: "nowrap" }}>#{i + 1} Priority</span>
-              <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkFaint, whiteSpace: "nowrap", minWidth: 100, textAlign: "right" }}>{win.category}</div>
-          </div>
+            </div>
+            <div onClick={() => setSelected(selected === i ? null : i)} style={{ cursor: "pointer", padding: "16px 0", borderBottom: `1px solid ${P.paperRule}`, fontFamily: FONT, fontSize: 13, color: P.inkFaint, whiteSpace: "nowrap", minWidth: 100, textAlign: "right" }}>{win.category}</div>
+          </Fragment>
         ))}
       </div>
 

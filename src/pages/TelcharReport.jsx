@@ -96,6 +96,12 @@ const STACK = {
       { label:"What is Make? (official explainer)", url:"https://help.make.com/what-is-make" },
       { label:"Create a free Make account", url:"https://www.make.com/en/register" },
       { label:"See templates built for your tools", url:getMakeTemplateUrl() },
+    ],
+    startHere:[
+      { label:"Create a Make account", url:"https://www.make.com/en/register" },
+      { label:"Beginner tutorial", url:"https://www.make.com/en/help/getting-started" },
+      { label:"How Make works", url:"https://www.make.com/en/how-it-works" },
+      { label:"QuickBooks integration", url:"https://www.make.com/en/integrations/quickbooks" },
     ]
   },
   claude: {
@@ -115,6 +121,12 @@ const STACK = {
       { label:"Try Claude free — no account needed to start", url:"https://claude.ai" },
       { label:"How Claude is different from ChatGPT", url:"https://www.anthropic.com/claude" },
       { label:"How to add Claude as a step in Make", url:"https://www.make.com/en/integrations/anthropic-claude" },
+    ],
+    startHere:[
+      { label:"Claude product page", url:"https://claude.ai" },
+      { label:"Claude documentation", url:"https://docs.anthropic.com/claude/docs/introduction" },
+      { label:"Prompt examples", url:"https://docs.anthropic.com/claude/docs/prompt-examples" },
+      { label:"Getting started / API", url:"https://docs.anthropic.com/claude/reference/getting-started" },
     ]
   },
   cowork: {
@@ -289,7 +301,7 @@ function ReportPage({ children, pg, total }) {
       background:P.paper,
       boxShadow:mobile?"none":"0 8px 48px rgba(0,0,0,0.28)",
       display:"flex", flexDirection:"column",
-      minHeight:"100vh",
+      minHeight:"calc(100vh - 48px)",
     }}>
       {/* Header — client-focused, no logo repeat */}
       <div style={{
@@ -299,11 +311,11 @@ function ReportPage({ children, pg, total }) {
       }}>
         <div>
           <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, fontWeight:600, color:"#D8DEE9", lineHeight:1.2 }}>{CO}</div>
-          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:"#B8C2CC", marginTop:2, letterSpacing:"0.04em" }}>{IND}</div>
+          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:"#D8DEE9", marginTop:2, letterSpacing:"0.04em" }}>{IND}</div>
         </div>
         <div style={{ textAlign:"right" }}>
-          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:P.navyMeta, marginBottom:2 }}>Telchar AI Readiness Index{"\u2122"}</div>
-          <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#B8C2CC", letterSpacing:"0.1em" }}>Confidential · {DATE}</div>
+          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:"#D8DEE9", marginBottom:2 }}>Telchar AI Readiness Index{"\u2122"}</div>
+          <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#D8DEE9", letterSpacing:"0.1em" }}>Confidential · {DATE}</div>
         </div>
       </div>
 
@@ -320,8 +332,8 @@ function ReportPage({ children, pg, total }) {
         display:"flex", alignItems:"center", justifyContent:"space-between",
         padding:"0 36px",
       }}>
-        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:500, letterSpacing:"0.2em", textTransform:"uppercase", color:"#B8C2CC" }}>Telchar AI · Confidential</span>
-        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#B8C2CC", letterSpacing:"0.1em" }}>Page {pg} of {total}</span>
+        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:500, letterSpacing:"0.2em", textTransform:"uppercase", color:"#D8DEE9" }}>Telchar AI · Confidential</span>
+        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#D8DEE9", letterSpacing:"0.1em" }}>Page {pg} of {total}</span>
       </div>
     </div>
   );
@@ -354,7 +366,7 @@ function PageCover({ pg, total, onNext }) {
       width:"100%",
       background:P.navy,
       boxShadow:"0 8px 48px rgba(0,0,0,0.28)",
-      minHeight:"100vh",
+      minHeight:"calc(100vh - 48px)",
       display:"flex", flexDirection:"column",
     }}>
       {/* Top strip */}
@@ -504,7 +516,7 @@ function PageQuickWins({ pg, total, tier, onUpgrade, demo }) {
     <ReportPage pg={pg} total={total}>
       <SecLabel>Priority improvement areas</SecLabel>
       <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13:15, color:P.inkMid, lineHeight:1.8, marginBottom:28 }}>
-        Three actions. Each executable within two weeks using Make and Claude. No new platforms required. Total cost under $30 per month.
+        Three recommended starting points. Each requires setup, configuration, and testing. Timelines depend on your team's capacity and technical comfort.
       </div>
 
       {visibleWins.map((w,i)=>(
@@ -625,6 +637,17 @@ function PageCategory({ catKey, pg, total }) {
             </div>
           ))}
         </div>
+        {tool.startHere && (
+          <div style={{ borderTop:`1px solid ${P.paperRule}`, paddingTop:12, marginTop:12 }}>
+            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.16em", textTransform:"uppercase", color:P.inkFaint, marginBottom:8 }}>Start here</div>
+            {tool.startHere.map((link,i)=>(
+              <div key={i} style={{ marginBottom:6 }}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:P.gold, textDecoration:"none", borderBottom:`1px solid ${P.gold}`, lineHeight:1.6 }}>{link.label}</a>
+                <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:P.inkFaint, marginLeft:8 }}>{"\u2192"} {link.url}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </ReportPage>
   );
@@ -636,19 +659,61 @@ function PageCategory({ catKey, pg, total }) {
 function PageRoadmap({ pg, total }) {
   const w = useWidth(); const mobile = w < 640;
   const phases = [
-    { phase:"Phase 1", label:"Quick Wins", window:"Weeks 1 – 4", color:P.gold,
-      steps:["Identify and document the two lowest-scoring workflow areas","Deploy Make account and connect existing tools (QuickBooks, Gmail, Calendar)","Build job-completion-to-invoice automation — the highest-friction handoff","Deploy Claude inside Make for automated customer follow-up drafting","Establish baseline metrics: hours saved, invoices auto-sent, response time"] },
-    { phase:"Phase 2", label:"Core Implementation", window:"Weeks 5 – 12", color:P.green,
-      steps:["Extend automation to remaining priority categories based on scorecard ranking","Build live performance dashboard connected to QuickBooks and sales data","Implement automated quote follow-up sequence at day 2, day 5, and day 10","Train team on Cowork for plain-language task execution across connected tools","Validate all workflows against defined success metrics before sign-off"] },
-    { phase:"Phase 3", label:"Optimization", window:"Months 4 – 6", color:"#2D6FBA",
-      steps:["Review 90-day performance data against baseline metrics","Identify compounding opportunities in adjacent workflows","Expand proven systems to additional use cases","Quarterly review cadence established — monthly if on retainer","Identify next implementation phase based on updated scorecard"] },
+    { phase:"Week 1–2", label:"Setup and Baseline", window:"Week 1 – 2", color:P.gold,
+      goal:"Accounts configured, tools connected, priority list locked.",
+      steps:[
+        "Audit all manual workflows across operations, sales, content, and data categories",
+        "Log time spent per task to establish baseline hours (use a shared tracker or spreadsheet)",
+        "Rank workflows by frequency × time cost to identify top 3 automation candidates",
+        "Create Make.com account, connect primary tools (CRM, email, invoicing, file storage)",
+        "Verify API access and permissions for each connected tool",
+        "Define success metrics for each candidate workflow (time saved, error rate, throughput)",
+      ] },
+    { phase:"Week 3–4", label:"First Pilot Live", window:"Week 3 – 4", color:P.gold,
+      goal:"One automated workflow running in production with error handling.",
+      steps:[
+        "Build the highest-priority Make scenario end-to-end in a test environment",
+        "Add error handling: retry logic, fallback notifications, dead-letter logging",
+        "Run 5–10 test cycles with real data, validate outputs match manual process",
+        "Deploy to production with a monitoring dashboard (Make execution logs + alerts)",
+        "Train 1–2 team members: what triggers it, how to check status, when to escalate",
+        "Track pilot performance daily for the first week, then weekly",
+      ] },
+    { phase:"Week 5–8", label:"Expand and Validate", window:"Week 5 – 8", color:P.green,
+      goal:"Three workflows automated, measurable time recovery confirmed.",
+      steps:[
+        "Deploy second automation scenario using lessons from the pilot build",
+        "Deploy third scenario — prioritize a cross-functional workflow (e.g., sales → operations handoff)",
+        "Integrate Claude for at least one content or communication workflow (drafting, summarization, or classification)",
+        "Compare actual time savings against Week 1–2 baseline for all three workflows",
+        "Identify and fix edge cases or failure modes surfaced during the first 4 weeks of operation",
+        "Document each workflow: trigger, steps, expected output, error handling, owner",
+      ] },
+    { phase:"Week 9–10", label:"Stabilize and Harden", window:"Week 9 – 10", color:"#2D6FBA",
+      goal:"All workflows stable, team operating independently, documentation complete.",
+      steps:[
+        "Review 30-day execution logs for each automation — flag error rates above 2%",
+        "Refine scenarios: tighten filters, improve data validation, reduce false triggers",
+        "Finalize team documentation: runbooks, escalation paths, troubleshooting guides",
+        "Conduct a team walkthrough so all stakeholders understand what is automated and what is not",
+        "Ensure at least one team member can modify or pause any scenario without outside help",
+      ] },
+    { phase:"Week 11–12", label:"Measure and Plan Next Phase", window:"Week 11 – 12", color:"#2D6FBA",
+      goal:"Clear ROI data, next automation candidates identified, practice self-sustaining.",
+      steps:[
+        "Calculate total hours recovered per week across all automated workflows",
+        "Compare actual ROI against the estimates in this report",
+        "Identify the next 2–3 automation candidates based on updated workflow audit",
+        "Assess whether additional tool integrations or Claude use cases are warranted",
+        "Produce a one-page summary: what was automated, hours saved, cost impact, next steps",
+      ] },
   ];
 
   return (
     <ReportPage pg={pg} total={total}>
       <SecLabel>90-Day implementation roadmap</SecLabel>
       <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?13:15, color:P.inkMid, lineHeight:1.8, marginBottom:32 }}>
-        Structured as three progressive phases. Each phase builds on the prior without disrupting operational continuity. Implementation is scoped, milestone-driven, and delivered by Telchar AI in collaboration with your team.
+        Structured as five progressive phases: setup, pilot, expansion, stabilization, and measurement. Each phase builds on the prior without disrupting operational continuity. Implementation is scoped, milestone-driven, and delivered by Telchar AI in collaboration with your team.
       </p>
 
       {phases.map((ph,i)=>(
@@ -658,6 +723,7 @@ function PageRoadmap({ pg, total }) {
               <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", color:ph.color, marginBottom:4 }}>{ph.phase}</div>
               <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:15, fontWeight:700, color:P.ink, marginBottom:4 }}>{ph.label}</div>
               <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:P.inkFaint, letterSpacing:"0.04em" }}>{ph.window}</div>
+              {ph.goal && <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:P.inkLight, lineHeight:1.6, marginTop:8, fontStyle:"italic" }}>{ph.goal}</div>}
             </div>
             <div>
               {ph.steps.map((s,j)=>(
@@ -742,47 +808,29 @@ function PageDataInfra({ pg, total }) {
 function PageEngagement({ pg, total }) {
   return (
     <ReportPage pg={pg} total={total}>
-      <SecLabel>Engagement pathway</SecLabel>
+      <SecLabel>Next steps</SecLabel>
+      <h2 style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:24, fontWeight:700, color:P.ink, lineHeight:1.2, marginBottom:16, letterSpacing:"-0.01em" }}>
+        Do you want project and program leadership support to help implement these recommendations with your team?
+      </h2>
+      <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:15, color:P.inkMid, lineHeight:1.8, marginBottom:20 }}>
+        Receiving a detailed report with recommendations, tools, and steps is valuable — but many businesses find the gap between knowing what to do and actually doing it difficult to close on their own. That hesitation is common and understandable.
+      </p>
       <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:15, color:P.inkMid, lineHeight:1.8, marginBottom:32 }}>
-        Telchar AI operates a three-phase engagement model. Every client starts with Discovery. Implementation is scoped from Discovery findings. Retainer ensures ongoing performance.
+        Structured implementation support may be available to help your team move from report to execution — with clear milestones, accountability, and hands-on guidance. Support is selective and fit-based. We work only with businesses where there is a strong mutual fit and a realistic path to meaningful outcomes.
       </p>
 
-      {[
-        { phase:"Discovery", price:"$3,500", window:"2 – 3 weeks", credit:"Full fee credits toward Implementation within 60 days",
-          deliverables:["AI Readiness Scorecard","Gap Analysis","Opportunity Map","AI Implementation Roadmap","Executive Summary","Findings presentation (60 min)"] },
-        { phase:"Implementation", price:"$10K – $25K", window:"4 – 12 weeks", credit:"Scoped from Discovery findings",
-          deliverables:["Solution design and tool selection","Process automation build","Team training and onboarding","Acceptance testing","Defined scope, timeline, and success metric"] },
-        { phase:"Retainer", price:"$1,500 – $3,000 / mo", window:"Ongoing", credit:"",
-          deliverables:["Monthly performance review","Optimization and new use cases","Quarterly business review","Builds capability, not dependency"] },
-      ].map((e,i)=>(
-        <div key={e.phase} style={{ marginBottom:28, paddingBottom:28, borderBottom:i<2?`1px solid ${P.paperRule}`:"none" }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10, flexWrap:"wrap", gap:8 }}>
-            <div>
-              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:16, fontWeight:700, color:P.ink }}>{e.phase}</div>
-              <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:P.inkFaint, letterSpacing:"0.04em", marginTop:2 }}>{e.window}</div>
-            </div>
-            <div style={{ textAlign:"right" }}>
-              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:15, fontWeight:700, color:P.gold }}>{e.price}</div>
-              {e.credit && <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:P.inkFaint, marginTop:2 }}>{e.credit}</div>}
-            </div>
-          </div>
-          <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
-            {e.deliverables.map((d,j)=>(
-              <div key={j} style={{ display:"flex", gap:8, width:"100%", marginBottom:4 }}>
-                <Diamond size={6} fill={P.goldLight} stroke="none" sw={0} style={{ marginTop:3, flexShrink:0 }}/>
-                <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:P.inkMid, lineHeight:1.6 }}>{d}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-
       {/* CTA */}
-      <div style={{ background:P.navy, padding:"24px 28px", marginTop:8 }}>
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:"#B8C2CC", marginBottom:8 }}>Next step</div>
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:20, fontWeight:700, color:"#D8DEE9", marginBottom:10 }}>Schedule a free 30-minute consultation</div>
-        <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#B8C2CC", lineHeight:1.75, margin:"0 0 18px" }}>Review your findings, ask questions, and understand whether a Discovery engagement is the right next step. No obligation.</p>
-        <button onClick={()=>alert("Production: opens calendar booking link.")} style={{ fontFamily:"'IBM Plex Sans',sans-serif", width:320, height:44, display:"flex", alignItems:"center", justifyContent:"center", background:P.gold, color:"#fff", fontSize:13, fontWeight:600, letterSpacing:"0.10em", textTransform:"uppercase", border:"none", cursor:"pointer", margin:"24px auto 0" }}>Book a Call</button>
+      <div style={{ textAlign:"center", marginTop:8, marginBottom:28 }}>
+        <button onClick={()=>alert("Production: opens implementation support application.")} style={{ fontFamily:"'IBM Plex Sans',sans-serif", width:360, height:44, display:"flex", alignItems:"center", justifyContent:"center", background:P.gold, color:"#fff", fontSize:13, fontWeight:600, letterSpacing:"0.10em", textTransform:"uppercase", border:"none", cursor:"pointer", margin:"0 auto 16px" }}>Apply for implementation support</button>
+        <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:P.inkLight, lineHeight:1.75, maxWidth:520, margin:"0 auto 24px" }}>
+          Availability is limited. We assess mutual fit before any engagement begins.
+        </p>
+      </div>
+
+      <div style={{ borderTop:`1px solid ${P.paperRule}`, paddingTop:24 }}>
+        <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:P.inkFaint, lineHeight:1.75, maxWidth:560, fontStyle:"italic", textAlign:"center", margin:"0 auto" }}>
+          Implementation support is informed by program and product leadership experience from large-scale delivery environments, adapted for small business execution.
+        </p>
       </div>
     </ReportPage>
   );
@@ -798,6 +846,9 @@ export default function App({ initialTier = "free", demo = false }) {
   const mapped = demo ? "full" : (TIER_MAP[initialTier] || "free");
   const [tier, setTier] = useState(mapped);
   const [cur, setCur]   = useState(0);
+
+  // Ensure report always opens with page 1 fully visible
+  useEffect(() => { window.scrollTo(0,0); }, []);
 
   const upgrade = (newTier) => {
     setTier(newTier);
@@ -900,7 +951,7 @@ export default function App({ initialTier = "free", demo = false }) {
         }}>›</button>
       </div>
 
-      {/* Report page — seamless paper background, no padding gap on mobile */}
+      {/* Report page */}
       <div style={{ display:"flex", justifyContent:"center", overflowX:"hidden" }}>
         <div style={{ width:"100%", maxWidth:1100 }}>
           {page.node}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { TELCHAR as P, FONT, MONO, GOOGLE_FONTS_URL, scoreColor, Diamond, Rule, SecLabel, TEXT, NAVY_TEXT, TYPE, CTA, OPTION_CARD } from "../design/telcharDesign";
+import ROICalculator from "../ROICalculator";
 
 // ─────────────────────────────────────────────────────────────
 // TELCHAR AI · Landing Page
@@ -109,7 +110,7 @@ function HeroSection({ onCTA }) {
             letterSpacing: "-0.01em",
           }}>
             Know where your business stands with AI<br />
-            <span style={{ color: P.goldLight }}>in 5 minutes</span>
+            <span style={{ color: P.goldLight }}>in about 5 minutes</span>
           </h1>
 
           <p style={{
@@ -149,7 +150,7 @@ function HeroSection({ onCTA }) {
             fontFamily: FONT, fontSize: 12, color: "#B8C2CC", marginTop: 16,
             letterSpacing: "0.04em",
           }}>
-            Free. 5 minutes. No login required.
+            Free. Adaptive questions. No login required.
           </p>
 
           <Link to="/report?tier=plan&demo=true" style={{
@@ -344,7 +345,7 @@ function TierSection({ onCTA }) {
             Every assessment starts free
           </h2>
           <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginTop: 14, lineHeight: 1.7, margin: "14px 0 0" }}>
-            Answer the same 18 questions. Choose how deep you want the analysis.
+            Adaptive questions. Choose how deep you want the analysis.
           </p>
         </div>
 
@@ -428,193 +429,17 @@ function TierSection({ onCTA }) {
 }
 
 // ════════════════════════════════════════════════════════════════
-// ROI CALCULATOR (expandable — matches standalone calculator)
+// ROI CALCULATOR (uses full standalone component in embedded mode)
 // ════════════════════════════════════════════════════════════════
-const RC_COST_OPTS = [
-  { label: "$25–$35", low: 25, high: 35 },
-  { label: "$35–$50", low: 35, high: 50 },
-  { label: "$50–$75", low: 50, high: 75 },
-  { label: "$75+",    low: 75, high: 95 },
-];
-const RC_HOUR_OPTS = [
-  { label: "<5 hrs",    low: 2,  high: 5 },
-  { label: "5–10 hrs",  low: 5,  high: 10 },
-  { label: "10–20 hrs", low: 10, high: 20 },
-  { label: "20+ hrs",   low: 20, high: 30 },
-];
-const RC_TEAM_OPTS = [
-  { label: "1–3",    factor: 1.0 },
-  { label: "4–10",   factor: 0.95 },
-  { label: "11–25",  factor: 0.88 },
-  { label: "26–50",  factor: 0.80 },
-  { label: "51–100", factor: 0.72 },
-];
-const RC_TOOL_OPTS = [
-  { label: "$0",        monthly: 0 },
-  { label: "$1–$50",    monthly: 25 },
-  { label: "$50–$200",  monthly: 125 },
-  { label: "$200–$500", monthly: 350 },
-  { label: "$500+",     monthly: 650 },
-];
-const RC_ADOPT_OPTS = [
-  { label: "Low",    factor: 0.55, desc: "Limited buy-in. Manual processes entrenched." },
-  { label: "Medium", factor: 0.72, desc: "Open to change. Some automation in place." },
-  { label: "High",   factor: 0.88, desc: "Leadership aligned. Team adopts tools quickly." },
-];
-const RC_DEFAULTS = {
-  admin:     { base: 0.28, label: "Admin and Data Entry",   q: "Admin, data entry, invoicing, or scheduling?", min: 0.15, max: 0.45 },
-  customer:  { base: 0.22, label: "Customer Follow-up",     q: "Customer follow-up, outreach, or communication?", min: 0.10, max: 0.40 },
-  content:   { base: 0.22, label: "Content and Marketing",  q: "Content creation, proposals, or marketing?", min: 0.10, max: 0.40 },
-  reporting: { base: 0.32, label: "Reporting and Tracking", q: "Tracking numbers, updating spreadsheets, or putting reports together?", min: 0.15, max: 0.50 },
-};
-const RC_OPT_BUMP = 0.05;
-const RC_GLOBAL_CAP = 0.25;
-const RC_CAT_CAP = 0.35;
-const rc_r50 = (n) => Math.round(n / 50) * 50;
-const rc_rH = (n) => Math.round(n * 2) / 2;
-const rc_pct = (n) => Math.round(n * 100);
-const rc_clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-const rc_pl = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
-
-function RCChip({ label, selected, onClick, small }) {
-  return (
-    <button onClick={onClick}
-      style={{
-        fontFamily: FONT, fontSize: small ? 12 : 13, fontWeight: selected ? 600 : 500,
-        padding: "10px 8px",
-        background: selected ? P.goldFaint : "transparent",
-        border: selected ? "2px solid " + P.gold : "1px solid #D6CCB8",
-        color: selected ? P.ink : P.inkMid,
-        cursor: "pointer", transition: "all 0.12s ease",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        whiteSpace: "nowrap", lineHeight: 1.2, minHeight: 44,
-        letterSpacing: selected ? "0.04em" : "0",
-        WebkitTapHighlightColor: "transparent", outline: "none",
-      }}
-    >{label}</button>
-  );
-}
-
-function RCQRow({ label, options, value, onChange, cols = 4, hint, mob }) {
-  const mobileCols = cols <= 3 ? cols : 2;
-  const effectiveCols = mob ? mobileCols : cols;
-  return (
-    <div style={{ marginBottom: 22 }}>
-      <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: P.inkMid, marginBottom: 10, lineHeight: 1.4 }}>{label}</div>
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${effectiveCols}, 1fr)`, gap: 8 }}>
-        {options.map(o => <RCChip key={o.label} label={o.label} selected={value === o.label} onClick={() => onChange(o.label)} small={effectiveCols > 4} />)}
-      </div>
-      {hint && value && <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginTop: 6, lineHeight: 1.35 }}>{hint(value)}</div>}
-    </div>
-  );
-}
-
-function RCCatRow({ label, hLo, hHi, sLo, sHi, rateLo, rateHi, mob }) {
-  return (
-    <div style={{ padding: mob ? "14px 0" : "16px 0", borderBottom: `1px solid ${P.paperRule}` }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 12 }}>
-        <div>
-          <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: P.ink }}>{label}</div>
-          <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginTop: 3 }}>{hLo}–{hHi} hrs/wk at {rc_pct(rateLo)}–{rc_pct(rateHi)}%</div>
-        </div>
-        <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 700, color: P.green, whiteSpace: "nowrap" }}>${sLo.toLocaleString()}–${sHi.toLocaleString()}</div>
-      </div>
-    </div>
-  );
-}
-
-function RCStepper({ current, labels }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", marginBottom: 28, gap: 0 }}>
-      {labels.map((l, i) => (
-        <div key={l} style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <Diamond
-              size={12}
-              fill={i <= current ? P.gold : "transparent"}
-              stroke={i <= current ? P.goldLight : P.inkFaint}
-              sw={1.5}
-            />
-            <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: i <= current ? P.inkMid : P.inkFaint, letterSpacing: "0.22em", textTransform: "uppercase" }}>{l}</span>
-          </div>
-          {i < labels.length - 1 && <div style={{ width: 28, height: 1, background: i < current ? P.gold : P.paperRule, margin: "0 8px" }} />}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function ROICalculatorSection() {
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState("questions");
-  const [cost, setCost] = useState(null);
-  const [hrs, setHrs] = useState({});
-  const [team, setTeam] = useState("1–3");
-  const [toolSpend, setToolSpend] = useState("$0");
-  const [adopt, setAdopt] = useState("Medium");
-  const [includeToolCost, setIncludeToolCost] = useState(true);
-  const [showAdjust, setShowAdjust] = useState(false);
-  const [rateOverrides, setRateOverrides] = useState({});
-  const [showRateSliders, setShowRateSliders] = useState(false);
   const sectionRef = useRef(null);
   const contentRef = useRef(null);
   const [mob, setMob] = useState(typeof window !== "undefined" ? window.innerWidth < 600 : false);
   useEffect(() => { const h = () => setMob(window.innerWidth < 600); window.addEventListener("resize", h); return () => window.removeEventListener("resize", h); }, []);
 
-  const catKeys = Object.keys(RC_DEFAULTS);
-  const hrsReady = cost && catKeys.every(k => hrs[k]);
-  const inputCount = (cost ? 1 : 0) + catKeys.filter(k => hrs[k]).length + (team !== "1–3" ? 1 : 0) + (adopt !== "Medium" ? 1 : 0) + (toolSpend !== "$0" ? 1 : 0);
-  const maxInputs = 8;
-  const confidenceScore = Math.min(100, Math.round((inputCount / maxInputs) * 70 + (RC_ADOPT_OPTS.find(o => o.label === adopt)?.factor || 0.72) * 30));
-  const confidenceLabel = confidenceScore >= 75 ? "Higher" : confidenceScore >= 55 ? "Moderate" : "Lower";
-
-  const getRate = useCallback((key) => {
-    const d = RC_DEFAULTS[key];
-    return rateOverrides[key] !== undefined ? rc_clamp(rateOverrides[key], d.min, d.max) : d.base;
-  }, [rateOverrides]);
-
-  const compute = useCallback(() => {
-    if (!hrsReady) return null;
-    const c = RC_COST_OPTS.find(o => o.label === cost);
-    const af = RC_ADOPT_OPTS.find(o => o.label === adopt)?.factor || 0.72;
-    const tf = RC_TEAM_OPTS.find(o => o.label === team)?.factor || 1.0;
-    const ts = RC_TOOL_OPTS.find(o => o.label === toolSpend)?.monthly || 0;
-    if (!c) return null;
-    const cMid = (c.low + c.high) / 2;
-    let tEntMid = 0;
-    catKeys.forEach(k => { const h = RC_HOUR_OPTS.find(o => o.label === hrs[k]); if (h) tEntMid += (h.low + h.high) / 2; });
-    let tLo = 0, tHi = 0;
-    const bd = [];
-    catKeys.forEach(k => {
-      const d = RC_DEFAULTS[k]; const h = RC_HOUR_OPTS.find(o => o.label === hrs[k]); if (!h) return;
-      const baseRate = getRate(k); const rateLo = baseRate; const rateHi = Math.min(baseRate + RC_OPT_BUMP, d.max);
-      let sLo = h.low * rateLo * af * tf; let sHi = h.high * rateHi * af * tf;
-      sLo = Math.min(sLo, h.low * RC_CAT_CAP); sHi = Math.min(sHi, h.high * RC_CAT_CAP);
-      tLo += sLo; tHi += sHi;
-      bd.push({ label: d.label, hLo: rc_rH(sLo), hHi: rc_rH(sHi), sLo: rc_r50(sLo * cMid * 52), sHi: rc_r50(sHi * cMid * 52), rateLo, rateHi });
-    });
-    const gCap = tEntMid * RC_GLOBAL_CAP;
-    if (tHi > gCap) { const sc = gCap / tHi; tHi = gCap; bd.forEach(b => { b.hHi = rc_rH(b.hHi * sc); b.sHi = rc_r50(b.sHi * sc); }); }
-    if (tLo > gCap) { const sc = gCap / tLo; tLo = gCap; bd.forEach(b => { b.hLo = rc_rH(b.hLo * sc); b.sLo = rc_r50(b.sLo * sc); }); }
-    const grossLo = rc_r50(tLo * cMid * 52); const grossHi = rc_r50(tHi * cMid * 52);
-    const annToolCost = ts * 12; const deduct = includeToolCost ? annToolCost : 0;
-    const netLo = grossLo - deduct; const netHi = grossHi - deduct;
-    let payback = null;
-    if (includeToolCost && annToolCost > 0 && grossHi > annToolCost) {
-      const avgMonthly = ((grossLo + grossHi) / 2) / 12;
-      if (avgMonthly > 0) payback = Math.ceil(annToolCost / avgMonthly);
-    }
-    return { bd, grossLo, grossHi, netLo, netHi, annToolCost, payback, wkLo: rc_rH(tLo), wkHi: rc_rH(tHi), costLabel: cost, af, tf };
-  }, [cost, hrs, adopt, team, toolSpend, includeToolCost, hrsReady, getRate, catKeys]);
-
-  const results = step === "results" ? compute() : null;
-  const pad = mob ? "24px 20px" : "32px 28px";
-  const cPad = mob ? "16px 20px" : "20px 24px";
-
   const handleToggle = () => { setOpen(o => !o); if (!open && contentRef.current) setTimeout(() => contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
-  const goResults = () => { setStep("results"); setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
-  const resetDefaults = () => { setAdopt("Medium"); setTeam("1–3"); setToolSpend("$0"); setIncludeToolCost(true); setRateOverrides({}); setShowRateSliders(false); };
-  const resetAll = () => { setCost(null); setHrs({}); resetDefaults(); setShowAdjust(false); setStep("questions"); setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
 
   return (
     <section ref={sectionRef} style={{ background: P.paperShade, color: P.ink, borderTop: `1px solid ${P.paperRule}`, borderBottom: `1px solid ${P.paperRule}` }}>
@@ -624,7 +449,7 @@ function ROICalculatorSection() {
           <h2 style={{ fontFamily: FONT, fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 700, color: P.ink, margin: 0, lineHeight: 1.2, letterSpacing: "-0.01em" }}>
             What is manual work costing your business?
           </h2>
-          {!open && <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginTop: 14, marginBottom: 0, lineHeight: 1.7 }}>8 questions. Conservative estimate. No email required.</p>}
+          {!open && <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginTop: 14, marginBottom: 0, lineHeight: 1.7 }}>Conservative estimate. No email required.</p>}
         </div>
         <div style={{ position: "absolute", top: "50%", right: mob ? 20 : 36, transform: "translateY(-50%)", width: 32, height: 32, border: `1px solid ${P.paperRule}`, background: open ? P.paper : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <span style={{ fontFamily: FONT, fontSize: 16, color: P.inkFaint, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.25s ease", display: "block", lineHeight: 1 }}>{"\u25BE"}</span>
@@ -634,85 +459,7 @@ function ROICalculatorSection() {
       <div ref={contentRef} style={{ overflow: "hidden", maxHeight: open ? "9999px" : "0px", transition: "max-height 0.4s ease" }}>
         <div style={{ borderTop: `1px solid ${P.paperRule}`, padding: mob ? "32px 20px 48px" : "40px 36px 64px", maxWidth: 980, margin: "0 auto" }}>
           <div style={{ maxWidth: 680, margin: "0 auto" }}>
-            {step === "questions" && (
-              <>
-                <RCStepper current={0} labels={["Inputs", "Results"]} />
-                <div style={{ background: P.paper, border: `1px solid ${P.paperRule}`, padding: pad }}>
-                  <SecLabel>Your time</SecLabel>
-                  <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: P.inkMid, marginBottom: 4, lineHeight: 1.5 }}>About how many total hours per week does your business spend on the activities below?</div>
-                  <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginBottom: 22, lineHeight: 1.4 }}>Estimate across the whole business, not just you.</div>
-                  {catKeys.map(k => <RCQRow key={k} label={RC_DEFAULTS[k].q} options={RC_HOUR_OPTS} value={hrs[k]} onChange={v => setHrs(p => ({ ...p, [k]: v }))} mob={mob} />)}
-                  <div style={{ marginBottom: 22 }}>
-                    <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: P.inkMid, marginBottom: 4, lineHeight: 1.5 }}>On average, what do you pay per hour for the people doing this work?</div>
-                    <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginBottom: 10, lineHeight: 1.4 }}>Include wages, payroll taxes, and basic benefits.</div>
-                    <div style={{ display: "grid", gridTemplateColumns: `repeat(${mob ? 2 : 4}, 1fr)`, gap: 8 }}>
-                      {RC_COST_OPTS.map(o => <RCChip key={o.label} label={o.label} selected={cost === o.label} onClick={() => setCost(o.label)} />)}
-                    </div>
-                  </div>
-                  <Rule style={{ marginBottom: 22 }} />
-                  <SecLabel style={{ marginTop: 4 }}>Context</SecLabel>
-                  <RCQRow label="How many people do this work?" options={RC_TEAM_OPTS} value={team} onChange={setTeam} cols={5} mob={mob} />
-                  <RCQRow label="Monthly software spend for automation?" options={RC_TOOL_OPTS} value={toolSpend} onChange={setToolSpend} cols={5} mob={mob} />
-                  <RCQRow label="How ready is your team to use new tools?" options={RC_ADOPT_OPTS} value={adopt} onChange={setAdopt} cols={3} mob={mob}
-                    hint={(v) => RC_ADOPT_OPTS.find(o => o.label === v)?.desc || ""} />
-                  <div style={{ display: "flex", gap: 14, alignItems: "center", marginTop: 8 }}>
-                    <button onClick={goResults} disabled={!hrsReady}
-                      style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: hrsReady ? P.gold : P.inkFaint, color: "#fff", border: "none", cursor: hrsReady ? "pointer" : "default", opacity: hrsReady ? 1 : 0.4, margin: "24px auto" }}>
-                      Calculate ROI
-                    </button>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {step === "results" && results && (
-              <div>
-                <RCStepper current={1} labels={["Inputs", "Results"]} />
-                <div style={{ background: P.paper, borderLeft: `3px solid ${P.gold}`, padding: mob ? "28px 20px" : "36px 32px", textAlign: "center", marginBottom: 24 }}>
-                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                    <SecLabel color={P.gold} style={{ marginBottom: 0 }}>Conservative estimate</SecLabel>
-                    <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: P.inkMid, background: P.paperShade, padding: "3px 8px", letterSpacing: "0.14em", textTransform: "uppercase" }}>{confidenceLabel} confidence</span>
-                  </div>
-                  <SecLabel color={P.inkFaint} style={{ marginBottom: 10 }}>
-                    {includeToolCost && results.annToolCost > 0 ? "Estimated Net Annual Savings" : "Estimated Annual Savings"}
-                  </SecLabel>
-                  <div style={{ fontFamily: FONT, fontSize: 32, fontWeight: 700, color: P.gold, lineHeight: 1, letterSpacing: "-0.02em" }}>
-                    {includeToolCost && results.annToolCost > 0
-                      ? (results.netHi <= 0 ? "No net savings" : `$${Math.max(0, results.netLo).toLocaleString()}–$${results.netHi.toLocaleString()}`)
-                      : `$${results.grossLo.toLocaleString()}–$${results.grossHi.toLocaleString()}`}
-                  </div>
-                  <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginTop: 12 }}>{results.wkLo}–{results.wkHi} hours recovered per week</div>
-                  {includeToolCost && results.annToolCost > 0 && (
-                    <div style={{ fontFamily: FONT, fontSize: 12, color: P.inkFaint, marginTop: 10 }}>Gross: ${results.grossLo.toLocaleString()}–${results.grossHi.toLocaleString()} | Tools: ${results.annToolCost.toLocaleString()}/yr</div>
-                  )}
-                  {results.payback !== null && includeToolCost && (
-                    <div style={{ fontFamily: FONT, fontSize: 12, color: P.green, marginTop: 6 }}>Estimated payback: {rc_pl(results.payback, "month")}</div>
-                  )}
-                </div>
-
-                <SecLabel>Savings by category</SecLabel>
-                {results.bd.map((r, i) => <RCCatRow key={i} {...r} mob={mob} />)}
-
-                <div style={{ background: P.paperShade, borderLeft: `3px solid ${P.goldLight}`, padding: cPad, margin: "16px 0" }}>
-                  <SecLabel style={{ marginBottom: 10 }}>Your inputs</SecLabel>
-                  <div style={{ display: "grid", gridTemplateColumns: mob ? "1fr" : "1fr 1fr", gap: mob ? "4px 0" : "4px 24px", fontFamily: FONT, fontSize: 12, color: P.inkMid, lineHeight: 1.8 }}>
-                    <div><span style={{ color: P.inkFaint }}>Labor cost:</span> {results.costLabel}/hr</div>
-                    <div><span style={{ color: P.inkFaint }}>Team size:</span> {team} employees</div>
-                    {catKeys.map(k => <div key={k}><span style={{ color: P.inkFaint }}>{RC_DEFAULTS[k].label}:</span> {hrs[k]}</div>)}
-                    <div><span style={{ color: P.inkFaint }}>Adoption:</span> {adopt} ({rc_pct(results.af)}%)</div>
-                    <div><span style={{ color: P.inkFaint }}>Tool spend:</span> {toolSpend}/mo</div>
-                  </div>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: mob ? "column" : "row", gap: 14, alignItems: mob ? "stretch" : "center", marginTop: 20 }}>
-                  <button onClick={() => setStep("questions")} style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: P.gold, color: "#fff", border: "none", cursor: "pointer", margin: "24px auto" }}>Adjust inputs</button>
-                  <a href="/assessment" style={{ fontFamily: FONT, fontSize: 12, color: P.gold, textDecoration: "none", borderBottom: `1px solid ${P.goldFaint}`, textAlign: mob ? "center" : "left" }}>Take the AI Readiness Assessment</a>
-                  <span onClick={resetAll} style={{ fontFamily: FONT, fontSize: 12, color: P.inkFaint, cursor: "pointer", borderBottom: `1px solid ${P.paperRule}`, textAlign: mob ? "center" : "left" }}>Start over</span>
-                </div>
-                <Rule style={{ margin: "20px 0 14px" }} />
-                <p style={{ fontFamily: FONT, fontSize: 13, color: P.inkFaint, lineHeight: 1.5, margin: 0 }}>No data stored. No email required. Provided by Telchar AI as a free planning resource.</p>
-              </div>
-            )}
+            <ROICalculator embedded />
           </div>
         </div>
       </div>
@@ -781,7 +528,7 @@ function WhoSection() {
 function StepsSection() {
   const isMobile = useIsMobile();
   const steps = [
-    { num: "01", title: "Answer 18 questions", desc: "Takes about five minutes. No preparation needed." },
+    { num: "01", title: "Answer adaptive questions", desc: "About 5 minutes. No preparation needed." },
     { num: "02", title: "See your AI readiness score", desc: "Get your overall score, category breakdown, and your single highest impact action immediately on screen." },
     { num: "03", title: "Choose your depth", desc: "Upgrade to the $50 Starter Report or $150 Full Scorecard if you want deeper analysis." },
   ];
@@ -840,7 +587,7 @@ function CTASection({ onCTA }) {
           Know where you stand before you spend a dollar on AI
         </h2>
         <p style={{ fontFamily: FONT, fontSize: 15, color: "#D8DEE9", lineHeight: 1.8, marginBottom: 44 }}>
-          18 questions. 5 minutes. Free results on screen. Upgrade to a detailed report if you want more.
+          Adaptive questions. About 5 minutes. Free results on screen. Upgrade to a detailed report if you want more.
         </p>
 
         <div style={{ textAlign: "center" }}>
