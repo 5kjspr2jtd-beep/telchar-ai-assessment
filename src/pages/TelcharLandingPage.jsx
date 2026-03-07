@@ -444,16 +444,24 @@ function ROICalculatorSection() {
   return (
     <section ref={sectionRef} style={{ background: P.paperShade, color: P.ink, borderTop: `1px solid ${P.paperRule}`, borderBottom: `1px solid ${P.paperRule}` }}>
       <div onClick={handleToggle} style={{ position: "relative", maxWidth: 980, margin: "0 auto", padding: mob ? "28px 20px" : "36px 36px", cursor: "pointer" }}>
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: "center", paddingRight: mob ? 0 : 48 }}>
           <SecLabel color={P.gold} style={{ marginBottom: 10 }}>ROI Calculator</SecLabel>
           <h2 style={{ fontFamily: FONT, fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 700, color: P.ink, margin: 0, lineHeight: 1.2, letterSpacing: "-0.01em" }}>
             What is manual work costing your business?
           </h2>
           {!open && <p style={{ fontFamily: FONT, fontSize: 15, color: P.inkLight, marginTop: 14, marginBottom: 0, lineHeight: 1.7 }}>Conservative estimate. No email required.</p>}
         </div>
-        <div style={{ position: "absolute", top: "50%", right: mob ? 20 : 36, transform: "translateY(-50%)", width: 32, height: 32, border: `1px solid ${P.paperRule}`, background: open ? P.paper : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ fontFamily: FONT, fontSize: 16, color: P.inkFaint, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.25s ease", display: "block", lineHeight: 1 }}>{"\u25BE"}</span>
-        </div>
+        {mob ? (
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
+            <div style={{ width: 40, height: 40, border: `1px solid ${P.paperRule}`, background: open ? P.paper : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontFamily: FONT, fontSize: 16, color: P.inkFaint, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.25s ease", display: "block", lineHeight: 1 }}>{"\u25BE"}</span>
+            </div>
+          </div>
+        ) : (
+          <div style={{ position: "absolute", top: "50%", right: 36, transform: "translateY(-50%)", width: 32, height: 32, border: `1px solid ${P.paperRule}`, background: open ? P.paper : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontFamily: FONT, fontSize: 16, color: P.inkFaint, transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.25s ease", display: "block", lineHeight: 1 }}>{"\u25BE"}</span>
+          </div>
+        )}
       </div>
 
       <div ref={contentRef} style={{ overflow: "hidden", maxHeight: open ? "9999px" : "0px", transition: "max-height 0.4s ease" }}>
