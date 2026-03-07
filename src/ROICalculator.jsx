@@ -638,9 +638,9 @@ export default function ROICalculator({ embedded = false }) {
       {/* ── Navy header (matches ReportPage pattern) ── */}
       <div style={{
         position: "sticky", top: 0, zIndex: 200,
-        background: P.navy, height: 56,
+        background: P.navy, height: mob ? 48 : 56,
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 36px",
+        padding: mob ? "0 16px" : "0 36px",
         borderBottom: `1px solid ${P.navyFaint}`,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

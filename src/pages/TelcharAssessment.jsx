@@ -1647,6 +1647,9 @@ export default function TelcharAssessment() {
   const [answers, setAnswers] = useState(null);
   const [scores, setScores] = useState(null);
 
+  // Always open at true top of page on mount
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
   // Warn before leaving during assessment
   useEffect(() => {
     if (page !== "assessment") return;

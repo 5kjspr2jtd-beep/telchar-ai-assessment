@@ -314,10 +314,10 @@ function Rule({ diamond=false, weight=1, style={} }) {
 }
 
 // Five-segment analytical scale + floating diamond marker
-function SegScale({ score }) {
+function SegScale({ score, compact }) {
   const col = scoreColor(score);
   return (
-    <div style={{ width:"100%" }}>
+    <div style={{ width:"100%", minWidth:0 }}>
       <div style={{ position:"relative", marginBottom:5 }}>
         <div style={{
           position:"absolute", top:-9,
@@ -345,7 +345,7 @@ function SegScale({ score }) {
       </div>
       <div style={{ display:"flex", justifyContent:"space-between" }}>
         {[0,20,40,60,80,100].map(n=>(
-          <span key={n} style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:P.inkFaint }}>{n}</span>
+          <span key={n} style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:compact?10:12, color:P.inkFaint }}>{n}</span>
         ))}
       </div>
     </div>
@@ -553,18 +553,32 @@ function PageSummary({ pg, total, tier, onUpgrade, demo }) {
 
       {/* Section 2: Category Breakdown */}
       <SecLabel>Category breakdown</SecLabel>
-      <div style={{ display:"grid", gridTemplateColumns:mobile?"44px 1fr 82px":"60px 1fr 110px", gap:mobile?12:22, paddingBottom:8, borderBottom:`2px solid ${P.ink}` }}>
-        {["Score","Category & scale","Maturity"].map((h,i)=>(
-          <div key={h} style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:P.inkLight, textAlign:i===0?"center":i===2?"right":"left" }}>{h}</div>
-        ))}
-      </div>
+      {!mobile && (
+        <div style={{ display:"grid", gridTemplateColumns:"60px 1fr 110px", gap:22, paddingBottom:8, borderBottom:`2px solid ${P.ink}` }}>
+          {["Score","Category & scale","Maturity"].map((h,i)=>(
+            <div key={h} style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:P.inkLight, textAlign:i===0?"center":i===2?"right":"left" }}>{h}</div>
+          ))}
+        </div>
+      )}
+      {mobile && <div style={{ borderBottom:`2px solid ${P.ink}`, paddingBottom:0, marginBottom:0 }}/>}
       {SCORES.cats.map(cat=>{
         const col = scoreColor(cat.score);
-        return (
-          <div key={cat.key} style={{ display:"grid", gridTemplateColumns:mobile?"44px 1fr 82px":"60px 1fr 110px", gap:mobile?12:22, padding:mobile?"14px 0 10px":"18px 0 12px", borderBottom:`1px solid ${P.paperRule}`, alignItems:"start" }}>
-            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?26:32, fontWeight:700, color:col, textAlign:"center", lineHeight:1, paddingTop:2 }}>{cat.score}</div>
+        return mobile ? (
+          <div key={cat.key} style={{ padding:"14px 0 10px", borderBottom:`1px solid ${P.paperRule}` }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:8 }}>
+              <div style={{ display:"flex", alignItems:"baseline", gap:10, minWidth:0 }}>
+                <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:26, fontWeight:700, color:col, lineHeight:1, flexShrink:0 }}>{cat.score}</span>
+                <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:500, color:P.ink, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{cat.label}</span>
+              </div>
+              <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:11, fontWeight:700, letterSpacing:"0.10em", textTransform:"uppercase", color:col, flexShrink:0, marginLeft:8 }}>{scoreTier(cat.score)}</span>
+            </div>
+            <SegScale score={cat.score} compact/>
+          </div>
+        ) : (
+          <div key={cat.key} style={{ display:"grid", gridTemplateColumns:"60px 1fr 110px", gap:22, padding:"18px 0 12px", borderBottom:`1px solid ${P.paperRule}`, alignItems:"start" }}>
+            <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:32, fontWeight:700, color:col, textAlign:"center", lineHeight:1, paddingTop:2 }}>{cat.score}</div>
             <div>
-              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?12:13, fontWeight:500, color:P.ink, marginBottom:10 }}>{cat.label}</div>
+              <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, fontWeight:500, color:P.ink, marginBottom:10 }}>{cat.label}</div>
               <SegScale score={cat.score}/>
             </div>
             <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", color:col, textAlign:"right", paddingTop:4 }}>{scoreTier(cat.score)}</div>
@@ -933,6 +947,8 @@ export default function App({ initialTier = "free", demo = false }) {
   const mapped = demo ? "full" : (TIER_MAP[initialTier] || "free");
   const [tier, setTier] = useState(mapped);
   const [cur, setCur]   = useState(0);
+  const navW = useWidth();
+  const navMobile = navW < 640;
 
   // Ensure report always opens with page 1 fully visible
   useEffect(() => { window.scrollTo(0,0); }, []);
@@ -989,7 +1005,7 @@ export default function App({ initialTier = "free", demo = false }) {
       `}</style>
 
       {/* Navigation bar */}
-      <div style={{ position:"sticky", top:0, zIndex:100, background:P.navy, height:48, display:"flex", alignItems:"center", padding:"0 16px", gap:10, borderBottom:`1px solid ${P.navyFaint}`, boxShadow:"0 2px 10px rgba(0,0,0,0.15)" }}>
+      <div style={{ position:"sticky", top:0, zIndex:100, background:P.navy, height:48, display:"flex", alignItems:"center", padding:navMobile?"0 8px":"0 16px", gap:navMobile?6:10, borderBottom:`1px solid ${P.navyFaint}`, boxShadow:"0 2px 10px rgba(0,0,0,0.15)" }}>
 
         {/* Prev — minimal text button */}
         <button onClick={prev} disabled={cur===0} style={{
@@ -1001,21 +1017,20 @@ export default function App({ initialTier = "free", demo = false }) {
           flexShrink:0, display:"flex", alignItems:"center",
         }}>‹</button>
 
-        {/* Logo */}
-        <img src={HDECAL} style={{ height:14, width:"auto", filter:"brightness(0) invert(1)", flexShrink:0 }} alt="Telchar AI"/>
-
-        <div style={{ width:1, height:12, background:P.navyFaint, flexShrink:0 }}/>
+        {/* Logo — hidden on mobile to save space */}
+        {!navMobile && <img src={HDECAL} style={{ height:14, width:"auto", filter:"brightness(0) invert(1)", flexShrink:0 }} alt="Telchar AI"/>}
+        {!navMobile && <div style={{ width:1, height:12, background:P.navyFaint, flexShrink:0 }}/>}
 
         {/* Page label — truncates gracefully */}
-        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#D8DEE9", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1, minWidth:0 }}>{page.label}</span>
+        <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:navMobile?12:13, color:"#D8DEE9", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", flex:1, minWidth:0 }}>{page.label}</span>
 
         {/* Tier tabs */}
-        <div style={{ display:"flex", gap:3, flexShrink:0 }}>
+        <div style={{ display:"flex", gap:navMobile?2:3, flexShrink:0 }}>
           {[["free","Free"],["starter","$50"],["full","$150"]].map(([t,label])=>(
             <button key={t} onClick={()=>upgrade(t)} style={{
-              fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700,
-              letterSpacing:"0.12em", textTransform:"uppercase",
-              padding:"3px 7px",
+              fontFamily:"'IBM Plex Sans',sans-serif", fontSize:navMobile?11:12, fontWeight:700,
+              letterSpacing:navMobile?"0.06em":"0.12em", textTransform:"uppercase",
+              padding:navMobile?"3px 5px":"3px 7px",
               background:tier===t?P.gold+"22":"transparent",
               color:tier===t?P.goldLight:"#B8C2CC",
               border:`1px solid ${tier===t?P.gold+"55":P.navyFaint}`,
@@ -1025,7 +1040,7 @@ export default function App({ initialTier = "free", demo = false }) {
         </div>
 
         {/* Page counter */}
-        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:13, color:"#B8C2CC", flexShrink:0, marginLeft:4 }}>{cur+1}/{pages.length}</span>
+        <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:navMobile?11:13, color:"#B8C2CC", flexShrink:0, marginLeft:navMobile?2:4 }}>{cur+1}/{pages.length}</span>
 
         {/* Next — minimal text button */}
         <button onClick={next} disabled={cur===pages.length-1} style={{
