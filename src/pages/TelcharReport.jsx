@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { scoreColor, scoreTier } from "../design/telcharDesign";
 
 // ─────────────────────────────────────────────────────────────
@@ -35,14 +36,108 @@ const P = {
 
 // Score color + tier labels imported from shared design system (scoreColor, scoreTier)
 
-// ── Data ─────────────────────────────────────────────────────
-const CO  = "Meridian Roofing Group";
-const IND = "Construction / Trades";
+// ── Demo / sample data (Meridian Roofing Group) ─────────────
+const DEMO_CO  = "Meridian Roofing Group";
+const DEMO_IND = "Construction / Trades";
+const DEMO_CLIENT_TOOLS = ["QuickBooks", "Gmail", "Google Calendar"];
+const DEMO_SCORES = {
+  overall: 54,
+  cats: [
+    { key:"operations", label:"Operations Efficiency",          score:48 },
+    { key:"sales",      label:"Sales & Customer Experience",    score:52 },
+    { key:"data",       label:"Data & Performance Visibility",  score:42 },
+    { key:"content",    label:"Content & Knowledge Management", score:58 },
+    { key:"technology", label:"Technology Readiness",           score:62 },
+  ]
+};
+const DEMO_WINS = [
+  { n:1, cat:"Data & Performance Visibility", title:"Connect Your Tools into a Single Automated Workflow",
+    desc:"Your data lives in QuickBooks, Gmail, and spreadsheets that don't talk to each other. Make connects them and automates the handoffs — job completed triggers invoice, invoice triggers follow-up, data feeds your dashboard. One platform manages all of it. Setup takes a few hours, not weeks.",
+    time:"1-2 weeks", tool:"Make", toolCost:"From $9/mo" },
+  { n:2, cat:"Operations Efficiency", title:"Automate Job Completion to Invoice to Follow-Up",
+    desc:"Every completed job should trigger an invoice and a customer follow-up automatically. Build this once in Make. It runs every time, without supervision. Your crew closes the job in the field. QuickBooks and Gmail handle the rest.",
+    time:"1 week", tool:"Make + Claude Pro", toolCost:"~$29/mo total" },
+  { n:3, cat:"Sales & Customer Experience", title:"Use Claude to Draft Every Customer-Facing Message",
+    desc:"Every quote follow-up, review request, and job summary can be drafted by Claude automatically. Make collects the job details, Claude writes the message, it lands in Gmail ready to send or goes out automatically. Your team stops writing the same emails manually every week.",
+    time:"1-2 weeks", tool:"Make + Claude Pro", toolCost:"~$29/mo total" },
+];
+
+// ── Mutable report data — overwritten from sessionStorage for real users ──
+let CO  = DEMO_CO;
+let IND = DEMO_IND;
+let CLIENT_TOOLS = DEMO_CLIENT_TOOLS;
+let SCORES = DEMO_SCORES;
+let WINS = DEMO_WINS;
+
 const DATE = new Date().toLocaleDateString("en-US", { month:"long", year:"numeric" });
 const BENCHMARK = 51;
 
-// Tools this client uses — drives dynamic Make template links
-const CLIENT_TOOLS = ["QuickBooks", "Gmail", "Google Calendar"];
+// Category labels used by the assessment scoring system
+const CATEGORY_LABELS = {
+  operations: "Operations Efficiency",
+  sales:      "Sales & Customer Experience",
+  data:       "Data & Performance Visibility",
+  content:    "Content & Knowledge Management",
+  technology: "Technology Readiness",
+};
+
+// Load real assessment data from sessionStorage (called at render time)
+function loadAssessmentData() {
+  try {
+    const saved = sessionStorage.getItem("telchar_assessment_data");
+    if (!saved) return false;
+    const data = JSON.parse(saved);
+    if (!data.scores || !data.scores.overall) return false;
+
+    // Map assessment scores → report SCORES format
+    const cats = Object.entries(data.scores.categories || {}).map(([key, cat]) => ({
+      key,
+      label: cat.label || CATEGORY_LABELS[key] || key,
+      score: cat.score,
+    }));
+    SCORES = { overall: data.scores.overall, cats };
+
+    // Company name and industry from answers
+    if (data.answers) {
+      CO  = data.answers.company_name || "Your Business";
+      IND = data.answers.industry     || "General";
+    }
+
+    // Map assessment quick wins → report WINS format
+    if (data.quickWins && data.quickWins.length > 0) {
+      WINS = data.quickWins.map((w, i) => ({
+        n: i + 1,
+        cat: w.category || "",
+        title: w.title || "",
+        desc: w.desc || "",
+        time: "2-4 weeks",
+        tool: "Make + Claude Pro",
+        toolCost: "~$29/mo total",
+      }));
+    }
+
+    // Derive tools from answers if available
+    if (data.answers) {
+      const tools = [];
+      if (data.answers.performance_tracking === "Accounting software like QuickBooks") tools.push("QuickBooks");
+      tools.push("Gmail", "Google Calendar");
+      CLIENT_TOOLS = tools;
+    }
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Reset to demo data
+function loadDemoData() {
+  CO = DEMO_CO;
+  IND = DEMO_IND;
+  CLIENT_TOOLS = DEMO_CLIENT_TOOLS;
+  SCORES = DEMO_SCORES;
+  WINS = DEMO_WINS;
+}
 
 // Build a Make template search URL using their actual tools + weakest category
 const getMakeTemplateUrl = () => {
@@ -54,29 +149,6 @@ const getMakeTemplateUrl = () => {
   const toolQuery = CLIENT_TOOLS.slice(0,2).map(t=>t.replace(/ /g,"+")).join("+");
   return "https://www.make.com/en/templates?page=1&q=" + toolQuery + "+" + catKeyword;
 };
-
-const SCORES = {
-  overall: 54,
-  cats: [
-    { key:"operations", label:"Operations Efficiency",          score:48 },
-    { key:"sales",      label:"Sales & Customer Experience",    score:52 },
-    { key:"data",       label:"Data & Performance Visibility",  score:42 },
-    { key:"content",    label:"Content & Knowledge Management", score:58 },
-    { key:"technology", label:"Technology Readiness",           score:62 },
-  ]
-};
-
-const WINS = [
-  { n:1, cat:"Data & Performance Visibility", title:"Connect Your Tools into a Single Automated Workflow",
-    desc:"Your data lives in QuickBooks, Gmail, and spreadsheets that don't talk to each other. Make connects them and automates the handoffs — job completed triggers invoice, invoice triggers follow-up, data feeds your dashboard. One platform manages all of it. Setup takes a few hours, not weeks.",
-    time:"1-2 weeks", tool:"Make", toolCost:"From $9/mo" },
-  { n:2, cat:"Operations Efficiency", title:"Automate Job Completion to Invoice to Follow-Up",
-    desc:"Every completed job should trigger an invoice and a customer follow-up automatically. Build this once in Make. It runs every time, without supervision. Your crew closes the job in the field. QuickBooks and Gmail handle the rest.",
-    time:"1 week", tool:"Make + Claude Pro", toolCost:"~$29/mo total" },
-  { n:3, cat:"Sales & Customer Experience", title:"Use Claude to Draft Every Customer-Facing Message",
-    desc:"Every quote follow-up, review request, and job summary can be drafted by Claude automatically. Make collects the job details, Claude writes the message, it lands in Gmail ready to send or goes out automatically. Your team stops writing the same emails manually every week.",
-    time:"1-2 weeks", tool:"Make + Claude Pro", toolCost:"~$29/mo total" },
-];
 
 const STACK = {
   make: {
@@ -307,15 +379,15 @@ function ReportPage({ children, pg, total }) {
       <div style={{
         background:P.navy, flexShrink:0,
         display:"flex", alignItems:"center", justifyContent:"space-between",
-        padding:"0 36px", height:56,
+        padding:mobile?"0 20px":"0 36px", height:mobile?48:56, gap:mobile?8:0,
       }}>
-        <div>
-          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, fontWeight:600, color:"#D8DEE9", lineHeight:1.2 }}>{CO}</div>
-          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, color:"#D8DEE9", marginTop:2, letterSpacing:"0.04em" }}>{IND}</div>
+        <div style={{ minWidth:0, flex:mobile?1:undefined }}>
+          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?12:13, fontWeight:600, color:"#D8DEE9", lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{CO}</div>
+          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?11:12, color:"#D8DEE9", marginTop:2, letterSpacing:"0.04em" }}>{IND}</div>
         </div>
-        <div style={{ textAlign:"right" }}>
-          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:"#D8DEE9", marginBottom:2 }}>Telchar AI Readiness Index{"\u2122"}</div>
-          <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#D8DEE9", letterSpacing:"0.1em" }}>Confidential · {DATE}</div>
+        <div style={{ textAlign:"right", flexShrink:0 }}>
+          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?10:12, fontWeight:700, letterSpacing:mobile?"0.14em":"0.22em", textTransform:"uppercase", color:"#D8DEE9", marginBottom:2 }}>{mobile?"Telchar AI":"Telchar AI Readiness Index"}{"\u2122"}</div>
+          <div style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:mobile?10:12, color:"#D8DEE9", letterSpacing:"0.1em" }}>Confidential · {DATE}</div>
         </div>
       </div>
 
@@ -330,7 +402,7 @@ function ReportPage({ children, pg, total }) {
       <div style={{
         background:P.navy, height:38, flexShrink:0,
         display:"flex", alignItems:"center", justifyContent:"space-between",
-        padding:"0 36px",
+        padding:mobile?"0 20px":"0 36px",
       }}>
         <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:500, letterSpacing:"0.2em", textTransform:"uppercase", color:"#D8DEE9" }}>Telchar AI · Confidential</span>
         <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#D8DEE9", letterSpacing:"0.1em" }}>Page {pg} of {total}</span>
@@ -349,7 +421,7 @@ function Paywall({ tier, onUpgrade }) {
       <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:cfg.color, marginBottom:8 }}>{cfg.label}</div>
       <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:P.inkMid, lineHeight:1.7, margin:"0 0 14px" }}>{cfg.desc}</p>
       <button onClick={onUpgrade} style={{
-        fontFamily:"'IBM Plex Sans',sans-serif", width:320, height:44, display:"flex", alignItems:"center", justifyContent:"center",
+        fontFamily:"'IBM Plex Sans',sans-serif", width:"100%", maxWidth:320, height:44, display:"flex", alignItems:"center", justifyContent:"center",
         background:cfg.color, color:"#fff", fontSize:13, fontWeight:600,
         letterSpacing:"0.10em", textTransform:"uppercase", border:"none", cursor:"pointer", margin:"24px auto",
       }}>Unlock Report</button>
@@ -361,11 +433,13 @@ function Paywall({ tier, onUpgrade }) {
 // PAGE 1 — COVER
 // ═══════════════════════════════════════════════════════════
 function PageCover({ pg, total, onNext }) {
+  const w = useWidth();
+  const mobile = w < 640;
   return (
     <div style={{
       width:"100%",
       background:P.navy,
-      boxShadow:"0 8px 48px rgba(0,0,0,0.28)",
+      boxShadow:mobile?"none":"0 8px 48px rgba(0,0,0,0.28)",
       minHeight:"calc(100vh - 48px)",
       display:"flex", flexDirection:"column",
     }}>
@@ -373,30 +447,30 @@ function PageCover({ pg, total, onNext }) {
       <div style={{ height:3, background:P.gold, flexShrink:0 }}/>
 
       {/* Content */}
-      <div style={{ flex:1, padding:"52px 48px 0", display:"flex", flexDirection:"column" }}>
+      <div style={{ flex:1, padding:mobile?"36px 20px 0":"52px 48px 0", display:"flex", flexDirection:"column" }}>
         <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.22em", textTransform:"uppercase", color:"#B8C2CC", marginBottom:12 }}>Telchar AI Readiness Index{"\u2122"}</div>
 
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:36, fontWeight:700, color:"#D8DEE9", lineHeight:1.1, letterSpacing:"-0.01em", marginBottom:8 }}>
+        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?28:36, fontWeight:700, color:"#D8DEE9", lineHeight:1.1, letterSpacing:"-0.01em", marginBottom:8 }}>
           {CO}
         </div>
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:16, color:"#B8C2CC", marginBottom:48 }}>{IND}</div>
+        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:16, color:"#B8C2CC", marginBottom:mobile?32:48 }}>{IND}</div>
 
-        <Rule diamond={false} style={{ borderTop:`1px solid #162438`, height:0, marginBottom:40 }}/>
+        <Rule diamond={false} style={{ borderTop:`1px solid #162438`, height:0, marginBottom:mobile?28:40 }}/>
 
         {/* Score preview on cover */}
         <div style={{ display:"flex", alignItems:"baseline", gap:16, marginBottom:12 }}>
-          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:80, fontWeight:700, color:scoreColor(SCORES.overall), lineHeight:1, letterSpacing:"-0.04em" }}>{SCORES.overall}</div>
+          <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:mobile?64:80, fontWeight:700, color:scoreColor(SCORES.overall), lineHeight:1, letterSpacing:"-0.04em" }}>{SCORES.overall}</div>
           <div>
             <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:15, fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", color:scoreColor(SCORES.overall), marginBottom:4 }}>{scoreTier(SCORES.overall)}</div>
             <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#B8C2CC" }}>out of 100</div>
           </div>
         </div>
 
-        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#B8C2CC", lineHeight:1.7, maxWidth:520, marginBottom:48 }}>
+        <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:"#B8C2CC", lineHeight:1.7, maxWidth:520, marginBottom:mobile?28:48 }}>
           This report presents findings from the Telchar AI Readiness Index{"\u2122"} across five operational dimensions. Scores reflect self-reported data collected via structured questionnaire and facilitated analysis.
         </div>
 
-        <div style={{ display:"flex", gap:32 }}>
+        <div style={{ display:mobile?"grid":"flex", gridTemplateColumns:mobile?"1fr 1fr":"none", gap:mobile?16:32, flexWrap:"wrap" }}>
           {[["Assessment date", DATE],["Framework","v2.4 · Five Category"],["Classification","Confidential"]].map(([k,v])=>(
             <div key={k}>
               <div style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:700, letterSpacing:"0.2em", textTransform:"uppercase", color:"#B8C2CC", marginBottom:4 }}>{k}</div>
@@ -414,7 +488,7 @@ function PageCover({ pg, total, onNext }) {
       )}
 
       {/* Footer */}
-      <div style={{ borderTop:`1px solid #162438`, height:38, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 48px", flexShrink:0 }}>
+      <div style={{ borderTop:`1px solid #162438`, height:38, display:"flex", alignItems:"center", justifyContent:"space-between", padding:mobile?"0 20px":"0 48px", flexShrink:0 }}>
         <span style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:12, fontWeight:500, letterSpacing:"0.2em", textTransform:"uppercase", color:"#B8C2CC" }}>Telchar AI · Confidential</span>
         <span style={{ fontFamily:"'IBM Plex Mono',monospace", fontSize:12, color:"#B8C2CC" }}>Page {pg} of {total}</span>
       </div>
@@ -806,6 +880,7 @@ function PageDataInfra({ pg, total }) {
 // PAGE 12 — ENGAGEMENT PATH (full only)
 // ═══════════════════════════════════════════════════════════
 function PageEngagement({ pg, total }) {
+  const navigate = useNavigate();
   return (
     <ReportPage pg={pg} total={total}>
       <SecLabel>Next steps</SecLabel>
@@ -821,7 +896,7 @@ function PageEngagement({ pg, total }) {
 
       {/* CTA */}
       <div style={{ textAlign:"center", marginTop:8, marginBottom:28 }}>
-        <button onClick={()=>alert("Production: opens implementation support application.")} style={{ fontFamily:"'IBM Plex Sans',sans-serif", width:360, height:44, display:"flex", alignItems:"center", justifyContent:"center", background:P.gold, color:"#fff", fontSize:13, fontWeight:600, letterSpacing:"0.10em", textTransform:"uppercase", border:"none", cursor:"pointer", margin:"0 auto 16px" }}>Apply for implementation support</button>
+        <button onClick={()=>navigate("/apply")} style={{ fontFamily:"'IBM Plex Sans',sans-serif", width:"100%", maxWidth:360, height:44, display:"flex", alignItems:"center", justifyContent:"center", background:P.gold, color:"#fff", fontSize:13, fontWeight:600, letterSpacing:"0.10em", textTransform:"uppercase", border:"none", cursor:"pointer", margin:"0 auto 16px" }}>Apply for implementation support</button>
         <p style={{ fontFamily:"'IBM Plex Sans',sans-serif", fontSize:13, color:P.inkLight, lineHeight:1.75, maxWidth:520, margin:"0 auto 24px" }}>
           Availability is limited. We assess mutual fit before any engagement begins.
         </p>
@@ -843,6 +918,18 @@ function PageEngagement({ pg, total }) {
 const TIER_MAP = { free:"free", report:"starter", plan:"full" };
 
 export default function App({ initialTier = "free", demo = false }) {
+  // Load the correct data source: demo uses Meridian sample, real uses sessionStorage
+  if (demo) {
+    loadDemoData();
+  } else {
+    const hasRealData = loadAssessmentData();
+    if (!hasRealData) {
+      // No assessment data found and not in demo mode — show report with whatever defaults exist
+      // This handles direct /report?tier=free links without a completed assessment
+      loadDemoData();
+    }
+  }
+
   const mapped = demo ? "full" : (TIER_MAP[initialTier] || "free");
   const [tier, setTier] = useState(mapped);
   const [cur, setCur]   = useState(0);

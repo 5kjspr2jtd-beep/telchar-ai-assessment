@@ -890,16 +890,20 @@ function ScoreDisplay({ score, label, isOverall = false }) {
 
 function DiamondStepper({ current, total }) {
   const SECTION_TITLES = ["Your Business", "Operational Friction", "Visibility and Systems", "Technology and Direction", "Your Scorecard"];
+  const SECTION_TITLES_SHORT = ["Business", "Friction", "Visibility", "Technology", "Scorecard"];
   const currentQuestion = QUESTIONS[current];
   const currentSection = currentQuestion ? currentQuestion.section : 1;
+  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth < 640 : false);
+  useEffect(() => { const h = () => setIsMobile(window.innerWidth < 640); window.addEventListener("resize", h); return () => window.removeEventListener("resize", h); }, []);
+  const titles = isMobile ? SECTION_TITLES_SHORT : SECTION_TITLES;
 
   return (
-    <div style={{ width: "100%", padding: "0 0 24px 0" }}>
+    <div style={{ width: "100%", padding: "0 0 24px 0", overflow: "hidden" }}>
       <div style={{ fontFamily: MONO, fontSize: 13, color: P.inkFaint, letterSpacing: "0.08em", marginBottom: 12 }}>
         Question {current + 1}
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", alignItems: "center", marginBottom: 8, position: "relative" }}>
-        {SECTION_TITLES.map((title, i) => {
+        {titles.map((title, i) => {
           const sectionNum = i + 1;
           const isCompleted = currentSection > sectionNum;
           const isActive = currentSection === sectionNum;
@@ -908,7 +912,7 @@ function DiamondStepper({ current, total }) {
               {i > 0 && (
                 <div style={{ position: "absolute", right: "50%", left: 0, top: "50%", height: 1, background: currentSection > sectionNum ? P.gold : (currentSection === sectionNum ? P.gold : P.paperRule), transform: "translateY(-50%)" }} />
               )}
-              {i < SECTION_TITLES.length - 1 && (
+              {i < titles.length - 1 && (
                 <div style={{ position: "absolute", left: "50%", right: 0, top: "50%", height: 1, background: isCompleted ? P.gold : P.paperRule, transform: "translateY(-50%)" }} />
               )}
               <svg width="10" height="10" viewBox="0 0 10 10" style={{ flexShrink: 0, display: "block", position: "relative", zIndex: 1 }}>
@@ -922,11 +926,11 @@ function DiamondStepper({ current, total }) {
         })}
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)" }}>
-        {SECTION_TITLES.map((title, i) => {
+        {titles.map((title, i) => {
           const sectionNum = i + 1;
           const isActive = currentSection === sectionNum;
           return (
-            <div key={i} style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: isActive ? P.ink : P.inkFaint, fontFamily: FONT, textAlign: "center" }}>
+            <div key={i} style={{ fontSize: isMobile ? 10 : 12, fontWeight: 700, letterSpacing: isMobile ? "0.08em" : "0.22em", textTransform: "uppercase", color: isActive ? P.ink : P.inkFaint, fontFamily: FONT, textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 2px" }}>
               {title}
             </div>
           );
@@ -990,7 +994,7 @@ function LandingPage({ onStart }) {
             Adaptive questions &middot; About 5 minutes &middot; Free &middot; Confidential
           </div>
 
-          <button onClick={onStart} style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: P.gold, color: "#fff", border: "none", cursor: "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
+          <button onClick={onStart} style={{ fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: P.gold, color: "#fff", border: "none", cursor: "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
             onMouseOver={(e) => { e.target.style.background = P.goldLight; }}
             onMouseOut={(e) => { e.target.style.background = P.gold; }}
           >
@@ -1290,7 +1294,7 @@ function AssessmentFlow({ onComplete }) {
               </button>
               {showContinueButton && (
                 <button onClick={handleNext}
-                  style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: P.gold, border: "none", color: "#fff", cursor: "pointer", transition: "all 0.15s ease" }}
+                  style={{ fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: P.gold, border: "none", color: "#fff", cursor: "pointer", transition: "all 0.15s ease" }}
                   onMouseOver={(e) => { e.target.style.background = P.goldLight; }}
                   onMouseOut={(e) => { e.target.style.background = P.gold; }}
                 >
@@ -1378,7 +1382,7 @@ function ReportSection({ section, defaultOpen = false, locked = false, freeInsig
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, minWidth: 140 }}>
             <svg width="12" height="12" viewBox="0 0 12 12" style={{ opacity: 0.4 }}><path d="M9 5V4a3 3 0 00-6 0v1H2v7h8V5H9zM4 4a2 2 0 014 0v1H4V4z" fill={P.inkLight}/></svg>
             <button onClick={onUpgrade}
-              style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: "transparent", color: P.gold, border: `1px solid ${P.gold}`, cursor: "pointer", transition: "all 0.2s ease", whiteSpace: "nowrap" }}
+              style={{ fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: "transparent", color: P.gold, border: `1px solid ${P.gold}`, cursor: "pointer", transition: "all 0.2s ease", whiteSpace: "nowrap" }}
               onMouseOver={(e) => { e.target.style.background = P.gold + "0A"; }}
               onMouseOut={(e) => { e.target.style.background = "transparent"; }}
             >
@@ -1397,7 +1401,7 @@ function ReportSection({ section, defaultOpen = false, locked = false, freeInsig
             <div style={{ marginTop: 16, padding: "20px 24px", background: P.paperShade, borderLeft: `3px solid ${P.gold}` }}>
               <div style={{ fontFamily: FONT, fontSize: 13, color: P.inkLight, marginBottom: 8 }}>Detailed execution steps and tool recommendations available in the full report.</div>
               <button onClick={onUpgrade}
-                style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: "transparent", color: P.gold, border: `1px solid ${P.gold}`, cursor: "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
+                style={{ fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: "transparent", color: P.gold, border: `1px solid ${P.gold}`, cursor: "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
                 onMouseOver={(e) => { e.target.style.background = P.gold + "0A"; }}
                 onMouseOut={(e) => { e.target.style.background = "transparent"; }}
               >
@@ -1544,7 +1548,7 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
 
               <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: P.inkLight, marginBottom: 14, fontFamily: FONT }}>Recommended for businesses ready to implement</div>
               <button onClick={handleAdvancedCheckout} disabled={advancedLoading}
-                style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: advancedLoading ? P.inkFaint : P.gold, color: "#fff", border: "none", cursor: advancedLoading ? "default" : "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
+                style={{ fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: advancedLoading ? P.inkFaint : P.gold, color: "#fff", border: "none", cursor: advancedLoading ? "default" : "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
                 onMouseOver={(e) => { if (!advancedLoading) { e.target.style.background = P.goldLight; } }}
                 onMouseOut={(e) => { if (!advancedLoading) { e.target.style.background = P.gold; } }}
               >
@@ -1558,7 +1562,7 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
 
               <div style={{ marginTop: 28, paddingTop: 24, borderTop: `1px solid ${P.paperRule}` }}>
                 <button onClick={handleCheckout} disabled={checkoutLoading}
-                  style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: "transparent", color: checkoutLoading ? P.inkFaint : P.gold, border: `1px solid ${checkoutLoading ? P.paperRule : P.gold}`, cursor: checkoutLoading ? "default" : "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
+                  style={{ fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: "transparent", color: checkoutLoading ? P.inkFaint : P.gold, border: `1px solid ${checkoutLoading ? P.paperRule : P.gold}`, cursor: checkoutLoading ? "default" : "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
                   onMouseOver={(e) => { if (!checkoutLoading) { e.target.style.background = P.navy + "0A"; } }}
                   onMouseOut={(e) => { if (!checkoutLoading) { e.target.style.background = "transparent"; } }}
                 >
@@ -1586,7 +1590,7 @@ function ResultsPage({ answers, scores, quickWins, tier = "free", onCheckout, on
               <div style={{ paddingTop: 16, borderTop: `1px solid ${P.paperRule}` }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: P.inkLight, marginBottom: 14, fontFamily: FONT }}>Recommended for businesses ready to implement</div>
                 <button onClick={handleAdvancedCheckout} disabled={advancedLoading}
-                  style={{ fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: advancedLoading ? P.inkFaint : P.gold, color: "#fff", border: "none", cursor: advancedLoading ? "default" : "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
+                  style={{ fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", textTransform: "uppercase", background: advancedLoading ? P.inkFaint : P.gold, color: "#fff", border: "none", cursor: advancedLoading ? "default" : "pointer", margin: "24px auto", transition: "all 0.2s ease" }}
                   onMouseOver={(e) => { if (!advancedLoading) { e.target.style.background = P.goldLight; } }}
                   onMouseOut={(e) => { if (!advancedLoading) { e.target.style.background = P.gold; } }}
                 >
@@ -1726,11 +1730,11 @@ export default function TelcharAssessment() {
 
   // TODO: Re-enable Stripe checkout when going live. For now, bypass to report preview.
   const handleCheckout = () => {
-    navigate("/report?tier=report&demo=true");
+    navigate("/report?tier=report");
   };
 
   const handleAdvancedCheckout = () => {
-    navigate("/report?tier=plan&demo=true");
+    navigate("/report?tier=plan");
   };
 
   return (

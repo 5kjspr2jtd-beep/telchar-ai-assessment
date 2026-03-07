@@ -136,7 +136,7 @@ function HeroSection({ onCTA }) {
 
           <div style={{ textAlign: "center" }}>
             <button onClick={onCTA} style={{
-              fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
               background: P.gold, color: "#fff", fontSize: 13, fontWeight: 600,
               letterSpacing: "0.10em", textTransform: "uppercase",
               border: "none", cursor: "pointer", margin: "24px auto",
@@ -277,7 +277,7 @@ function ProofSection({ onCTA }) {
 
             <div style={{ marginTop: 14 }}>
               <button onClick={onCTA} style={{
-                fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
                 background: P.gold, color: "#fff", fontSize: 13, fontWeight: 600,
                 letterSpacing: "0.10em", textTransform: "uppercase",
                 border: "none", cursor: "pointer", margin: "24px auto",
@@ -404,7 +404,7 @@ function TierSection({ onCTA }) {
 
               {tier.featured && (
                 <button onClick={onCTA} style={{
-                  fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+                  fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
                   background: P.gold, color: "#fff", fontSize: 13, fontWeight: 600,
                   letterSpacing: "0.10em", textTransform: "uppercase",
                   border: "none", cursor: "pointer", margin: "24px auto",
@@ -592,7 +592,7 @@ function CTASection({ onCTA }) {
 
         <div style={{ textAlign: "center" }}>
           <button onClick={onCTA} style={{
-            fontFamily: FONT, width: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
+            fontFamily: FONT, width: "100%", maxWidth: 320, height: 44, display: "flex", alignItems: "center", justifyContent: "center",
             background: P.gold, color: "#fff", fontSize: 13, fontWeight: 600,
             letterSpacing: "0.10em", textTransform: "uppercase",
             border: "none", cursor: "pointer", margin: "24px auto",
